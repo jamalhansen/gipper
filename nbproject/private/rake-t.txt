@@ -1,0 +1,5 @@
+(in C:/ruby_projects/gipper)
+rake aborted!
+No such file or directory - Manifest.txt
+C:/ruby_projects/gipper/rakefile:6:in `new'
+(See full trace by running task with --trace)

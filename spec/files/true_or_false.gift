@@ -1,0 +1,19 @@
+::TrueStatement about monkeys::Monkeys like to fly like ninjas.{T}
+
+// question: 0 name: TrueStatement
+::A Second TrueStatement about monkeys::
+ Monkeys roam in packs with swords.{True}
+
+Monkeys will jump from buildings without fear. {T}
+
+Monkeys have a formal system of government{False}
+
+::A Second FalseStatement about monkeys
+::Monkeys wear suits and sit around in corporate offices.{False}
+
+// question: 6 name: FalseStatement
+::A Third FalseStatement about monkeys:: Monkeys can operate heavy machinery.{F}
+
+
+
+

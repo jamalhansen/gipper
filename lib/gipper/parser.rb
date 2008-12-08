@@ -21,8 +21,8 @@ module Gipper
     def array_with_added matches, in_array
       return in_array if !matches
       
-      question = matches[1]
-      answer = matches[2]
+      question = matches[1].strip
+      answer = matches[2].strip
       title, question_text = strip_title(question)
 
       ## for testing
@@ -44,7 +44,7 @@ module Gipper
     def strip_title question
       parts = /:{2}([^:{2}]+):{2}([^:{2}]+)/.match question
       if parts
-        return [parts[1], parts[2]]
+        return [parts[1].strip, parts[2].strip]
       end
       
       return [nil, question]

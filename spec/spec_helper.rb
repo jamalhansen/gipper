@@ -6,12 +6,11 @@ rescue LoadError
   require 'spec'
 end
 
-#$:.unshift(File.dirname(__FILE__) + '/../lib')
 $:.unshift(File.dirname(__FILE__) + '/../lib/gipper')
-require 'parser'
+require 'parsing_service'
 
-def is_true string
-  string == "{T}" || string == "{True}"
+def is_true answer
+  !(answer.downcase.strip =~ /^(t|true)$/).nil?
 end
 
 def true_false_question title, question, answer

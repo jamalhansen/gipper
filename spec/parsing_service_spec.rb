@@ -1,11 +1,16 @@
 require File.join(File.dirname(__FILE__), *%w[spec_helper.rb])
 
-describe Gipper::Parser do
+describe Gipper::ParsingService do
   
   before(:each) do
-    @parser = Gipper::Parser.new
+    @parser = Gipper::ParsingService.new
     @single_question = "This is a really lame question"
     @single_answer = "{T}"
+  end
+  
+  it "should be able to determine a question's type" do
+    @parser.question_type("A true false question.{T}").should eql(:true_false)
+    @parser.question_type("Which answer is best?{=Apple Cakes ~Bread ~Cod3 ~Dog}").should eql(:multiple_choice)
   end
   
   describe "(when passed an empty string)" do
@@ -112,7 +117,7 @@ describe Gipper::Parser do
     end
     
     it "should return the second title" do
-      @output[1][:title].should be nil
+      @output[1][:title].should be(nil)
     end
     
     it "should return the second question" do

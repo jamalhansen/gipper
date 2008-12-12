@@ -1,3 +1,7 @@
+require 'multiple_choice_answer'
+require 'true_false_answer_parser'
+require 'multiple_choice_answer_parser'
+
 module Gipper
   class ParsingService
     def parse gift_questions
@@ -18,7 +22,7 @@ module Gipper
         question, answer = split_question_from_answer head
       rescue
         #we weren't able to parse the question, so move on to the next one
-        return parse_questions tail, array
+        return parse_questions(tail, array)
       end
       
       parse_questions tail, array_with_added(question, answer, array)
@@ -31,17 +35,9 @@ module Gipper
       question_hash[:title] = title
       question_hash[:question] = question_text
       
-      if is_a_multiple_choice answer
-        question_hash[:answer] = is_a_true answer
-        question_hash[:style] = :multiple_choice
-      end
       
-      if is_a_true_false answer
-        question_hash[:answer] = is_a_true answer
-        question_hash[:style] = :true_false 
-      end
 
-      in_array << question_hash
+      in_array << (question_hash.merge(parse_answer(answer)))
     end
     
     def strip_title question
@@ -53,16 +49,6 @@ module Gipper
       return [nil, question]
     end
     
-    def is_a_true answer
-      !(answer.downcase.strip =~ /^(t|true)$/).nil?
-    end
-    
-    def is_a_true_false answer
-      return false if answer.nil?
-
-      answer.downcase.strip =~ /(t|f|true|false)/
-    end
-
     def split_question_from_answer text
       matches = /^([^(\{|\})]+)\{([^(\{|\})]+)\}/.match text
       [question = matches[1].strip, question = matches[2].strip]
@@ -70,13 +56,22 @@ module Gipper
     
     def question_type text
       question, answer = split_question_from_answer text
-      return :true_false if is_a_true_false answer
-      return :multiple_choice if is_a_multiple_choice answer
-    end
-        
-    def is_a_multiple_choice answer
-      answer.downcase.strip =~ /^((~|=)[^(~|=)]+)+$/
+      return :true_false if Gipper::TrueFalseAnswerParser.can_parse? answer
+      return :multiple_choice if Gipper::MultipleChoiceAnswerParser.can_parse? answer
     end
     
+    def parse_answer text
+      if Gipper::MultipleChoiceAnswerParser.can_parse? text
+        answer_parser = Gipper::MultipleChoiceAnswerParser.new
+        answer = answer_parser.parse text
+      end
+      
+      if Gipper::TrueFalseAnswerParser.can_parse? text
+        answer_parser = Gipper::TrueFalseAnswerParser.new
+        answer = answer_parser.parse text
+      end
+      
+      answer
+    end
   end
 end

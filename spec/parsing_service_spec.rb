@@ -38,7 +38,7 @@ describe Gipper::ParsingService do
     end
     
     it "should return the answer" do
-      @output[0][:answer].should eql(is_true(@single_answer))
+      @output[0][:answer].should eql(true)
     end
     
     it "should return the style" do
@@ -66,7 +66,7 @@ describe Gipper::ParsingService do
     end
     
     it "should return the answer" do
-      @output[0][:answer].should eql(is_true(@single_answer))
+      @output[0][:answer].should eql(false)
     end
     
     it "should return the style" do
@@ -109,7 +109,7 @@ describe Gipper::ParsingService do
     end
     
     it "should return the first answer" do
-      @output[0][:answer].should eql(is_true(@a1))
+      @output[0][:answer].should eql(true)
     end
     
     it "should return the first style" do
@@ -125,7 +125,7 @@ describe Gipper::ParsingService do
     end
     
     it "should return the second answer" do
-      @output[1][:answer].should eql(is_true(@a2))
+      @output[1][:answer].should eql(true)
     end
     
     it "should return the second style" do
@@ -141,7 +141,7 @@ describe Gipper::ParsingService do
     end
     
     it "should return the first answer" do
-      @output[2][:answer].should eql(is_true(@a3))
+      @output[2][:answer].should eql(true)
     end
     
     it "should return the first style" do

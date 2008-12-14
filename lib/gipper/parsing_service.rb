@@ -1,6 +1,5 @@
-require 'multiple_choice_answer'
-require 'true_false_answer_parser'
-require 'multiple_choice_answer_parser'
+require 'answers'
+require 'answer_parser'
 
 module Gipper
   class ParsingService
@@ -30,14 +29,12 @@ module Gipper
     
     def array_with_added question, answer, in_array
       title, question_text = strip_title(question)
-      
       question_hash = {}
       question_hash[:title] = title
       question_hash[:question] = question_text
+      question_hash[:answer] = parse_answer(answer)
       
-      
-
-      in_array << (question_hash.merge(parse_answer(answer)))
+      in_array << question_hash
     end
     
     def strip_title question
@@ -61,21 +58,12 @@ module Gipper
     def question_type text
       question, answer = split_question_from_answer text
       return :true_false if Gipper::TrueFalseAnswerParser.can_parse? answer
-      return :multiple_choice if Gipper::MultipleChoiceAnswerParser.can_parse? answer
+      return :multiple_choice if Gipper::AnswerParser.can_parse? answer
     end
     
     def parse_answer text
-      if Gipper::MultipleChoiceAnswerParser.can_parse? text
-        answer_parser = Gipper::MultipleChoiceAnswerParser.new
-        answer = answer_parser.parse text
-      end
-      
-      if Gipper::TrueFalseAnswerParser.can_parse? text
-        answer_parser = Gipper::TrueFalseAnswerParser.new
-        answer = answer_parser.parse text
-      end
-      
-      answer
+      answer_parser = Gipper::AnswerParser.new
+      answer = answer_parser.parse text
     end
   end
 end

@@ -7,12 +7,7 @@ describe Gipper::ParsingService do
     @single_question = "This is a really lame question"
     @single_answer = "{T}"
   end
-  
-  it "should be able to determine a question's type" do
-    @parser.question_type("A true false question.{T}").should eql(:true_false)
-    @parser.question_type("Which answer is best?{=Apple Cakes ~Bread ~Cod3 ~Dog}").should eql(:multiple_choice)
-  end
-  
+
   describe "(when passed an empty string)" do
     it "should return an empty array" do
       @parser.parse("").should eql([])
@@ -38,11 +33,11 @@ describe Gipper::ParsingService do
     end
     
     it "should return the answer" do
-      @output[0][:answer].should eql(true)
+      @output[0][:answer][0][:correct].should eql(:true)
     end
     
     it "should return the style" do
-      @output[0][:style].should eql(:true_false)
+      @output[0][:answer].style.should eql(:true_false)
     end
   end
   
@@ -66,11 +61,11 @@ describe Gipper::ParsingService do
     end
     
     it "should return the answer" do
-      @output[0][:answer].should eql(false)
+      @output[0][:answer][0][:correct].should eql(:false)
     end
     
     it "should return the style" do
-      @output[0][:style].should eql(:true_false)
+      @output[0][:answer].style.should eql(:true_false)
     end
     
     it "should return the title" do
@@ -109,11 +104,11 @@ describe Gipper::ParsingService do
     end
     
     it "should return the first answer" do
-      @output[0][:answer].should eql(true)
+      @output[0][:answer][0][:correct].should eql(:true)
     end
     
     it "should return the first style" do
-      @output[0][:style].should eql(:true_false)
+      @output[0][:answer].style.should eql(:true_false)
     end
     
     it "should return the second title" do
@@ -125,11 +120,11 @@ describe Gipper::ParsingService do
     end
     
     it "should return the second answer" do
-      @output[1][:answer].should eql(true)
+      @output[1][:answer][0][:correct].should eql(:true)
     end
     
     it "should return the second style" do
-     @output[1][:style].should eql(:true_false)
+     @output[1][:answer].style.should eql(:true_false)
     end
     
     it "should return the third title" do
@@ -141,11 +136,11 @@ describe Gipper::ParsingService do
     end
     
     it "should return the first answer" do
-      @output[2][:answer].should eql(true)
+      @output[2][:answer][0][:correct].should eql(:true)
     end
     
     it "should return the first style" do
-      @output[2][:style].should eql(:true_false)
+      @output[2][:answer].style.should eql(:true_false)
     end
   end
 end

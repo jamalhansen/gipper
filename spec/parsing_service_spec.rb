@@ -88,7 +88,7 @@ describe Gipper::ParsingService do
       @q2 = "Seattle has lots of water."
       @a2 = "{T}"
       
-      @q3 = "People in Seattle use umbrellas."
+      @q3 = "People in Seattle use umbrellas:"
       @a3 = "{T}"
       @t3 = "Accessories in the Pacific Northwest"
       

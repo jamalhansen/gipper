@@ -41,12 +41,16 @@ module Gipper
     end
     
     def strip_title question
-      parts = /:{2}([^:{2}]+):{2}([^:{2}]+)/.match question
+      title = nil
+      reg = Regexp.new(':{2}([^:{2}]+):{2}(.*)', Regexp::MULTILINE)
+      parts = reg.match question
+      
       if parts
-        return [parts[1].strip, parts[2].strip]
+        title = parts[1].strip
+        question = parts[2]
       end
       
-      return [nil, question]
+      return [title, question.strip]
     end
     
     def split_question_from_answer text

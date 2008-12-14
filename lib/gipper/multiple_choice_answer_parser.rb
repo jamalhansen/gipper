@@ -19,7 +19,7 @@ module Gipper
     
     # splits the head from the remaining clauses
     def split_multiple_choice clauses
-      matches = /^([~=][\w\s]+)(([~=][\w\s]+)*)/.match clauses
+      matches = /([~=][^(~|=)]+)(([~=][^(~|=)]+)*)/.match clauses
       
       return [matches[1], matches[2]] if matches
       return [nil, nil]

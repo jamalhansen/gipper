@@ -45,7 +45,7 @@ Then /^contains the correct multiple choice questions$/ do
   @questions[2][:answers][1].correct.should eql(:false)
   @questions[2][:answers][1].text.should eql("upset")
   @questions[2][:answers][2].correct.should eql(:false)
-  @questions[2][:answers][2].text.should eql("off_duty")
+  @questions[2][:answers][2].text.should eql("off duty")
   @questions[2][:answers][3].correct.should eql(:true)
   @questions[2][:answers][3].text.should eql("none of the above")
   
@@ -108,10 +108,10 @@ Then /^contains the correct multiple choice questions$/ do
   @questions[5][:answers][1].correct.should eql(:false)
   @questions[5][:answers][1].text.should eql("try to fight")
   @questions[5][:answers][1].comment.should eql("fight or fight not, there is no try.")
-  @questions[5][:answers][2].correct.should eql(:false)
+  @questions[5][:answers][2].correct.should eql(:true)
   @questions[5][:answers][2].text.should eql("slay them all with a single strike before they even saw you.")
   @questions[5][:answers][2].comment.should eql("You are Ninja!")
-  @questions[5][:answers][3].correct.should eql(:true)
+  @questions[5][:answers][3].correct.should eql(:false)
   @questions[5][:answers][3].text.should eql("run away")
   @questions[5][:answers][3].comment.should eql("You would make a poor ninja.")
 end

@@ -4,6 +4,8 @@ require 'answer_parser'
 module Gipper
   class ParsingService
     def parse gift_questions
+      gift_questions.strip!
+
       array = []
       return array if gift_questions.nil?
       
@@ -13,16 +15,11 @@ module Gipper
     
     def parse_questions gift_questions, array
       return array if gift_questions.length == 0
-      
+
       head = gift_questions.first 
       tail = gift_questions[1..gift_questions.length - 1]
       
-      begin
-        question, answer = split_question_from_answer head
-      rescue
-        #we weren't able to parse the question, so move on to the next one
-        return parse_questions(tail, array)
-      end
+      question, answer = split_question_from_answer head
       
       parse_questions tail, array_with_added(question, answer, array)
     end
@@ -32,14 +29,16 @@ module Gipper
       question_hash = {}
       question_hash[:title] = title
       question_hash[:question] = question_text
-      question_hash[:answer] = parse_answer(answer)
+      question_hash[:answer] = Gipper::Answers.new(answer)
       
       in_array << question_hash
     end
     
     def strip_title question
+      question.strip!
+      
       title = nil
-      reg = Regexp.new(':{2}([^:{2}]+):{2}(.*)', Regexp::MULTILINE)
+      reg = Regexp.new('^:{2}([^:{2}]+):{2}(.*)$', Regexp::MULTILINE)
       parts = reg.match question
       
       if parts
@@ -51,7 +50,10 @@ module Gipper
     end
     
     def split_question_from_answer text
-      matches = /^([^(\{|\})]+)\{([^(\{|\})]+)\}/.match text
+      text.strip!
+      reg = Regexp.new('^([^\{\}]+)\{(.+)\}$', Regexp::MULTILINE)
+      matches = reg.match text
+      #matches = /^([^\{\}]+)\{(.+)\}$/.match text
       [question = matches[1].strip, question = matches[2].strip]
     end
     
@@ -59,11 +61,6 @@ module Gipper
       question, answer = split_question_from_answer text
       return :true_false if Gipper::TrueFalseAnswerParser.can_parse? answer
       return :multiple_choice if Gipper::AnswerParser.can_parse? answer
-    end
-    
-    def parse_answer text
-      answer_parser = Gipper::AnswerParser.new
-      answer = answer_parser.parse text
     end
   end
 end

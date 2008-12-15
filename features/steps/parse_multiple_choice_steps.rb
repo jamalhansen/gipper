@@ -6,7 +6,9 @@ Given /^a GIFT file of multiple choice questions$/ do
 end
 
 Then /^contains the correct multiple choice questions$/ do
+    puts @questions
   @questions.length.should be(6)
+
 
   #::Ninjas and the future::In the future, ninjas will be able to{= Travel to the moon ~play tennis ~eat apples ~play fable 2 ~code in Assembly }
   @questions[0][:answer].style.should eql(:multiple_choice)

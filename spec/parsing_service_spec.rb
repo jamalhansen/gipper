@@ -17,8 +17,8 @@ describe Gipper::ParsingService do
   describe "(when passed a single question without comments or title)" do
     
     before(:each) do
-      @single_question = "This is a really lame question."
-      @single_answer = "{T}"
+      @single_question = "wubble."
+      @single_answer = "{=:) -> smiley}"
       single_input = @single_question + @single_answer
       
       @output = @parser.parse(single_input)
@@ -29,15 +29,19 @@ describe Gipper::ParsingService do
     end
     
     it "should return the question" do
-      @output[0][:question].should eql(@single_question)
+      @output[0][:question].should eql("wubble.")
     end
     
     it "should return the answer" do
-      @output[0][:answer][0][:correct].should eql(:true)
+      @output[0][:answer][0][:correct].should eql("smiley")
+    end
+    
+    it "should return the answer" do
+      @output[0][:answer][0][:text].should eql(":)")
     end
     
     it "should return the style" do
-      @output[0][:answer].style.should eql(:true_false)
+      @output[0][:answer].style.should eql(:matching)
     end
   end
   
@@ -86,8 +90,8 @@ describe Gipper::ParsingService do
       @q3 = "People in Seattle use umbrellas:"
       @a3 = "{T}"
       @t3 = "Accessories in the Pacific Northwest"
-      
-      multiple_input = "#{true_false_question(@t1, @q1, @a1)}\r\n\r\n#{true_false_question(@t2, @q2, @a2)}\r\n\r\n#{true_false_question(@t3, @q3, @a3)}"
+
+      multiple_input = "\r\n\r\n\\r\n#{true_false_question(@t1, @q1, @a1)}\r\n\r\n#{true_false_question(@t2, @q2, @a2)}\r\n\r\n#{true_false_question(@t3, @q3, @a3)}"
       @output = @parser.parse(multiple_input)
     end
   

@@ -1,8 +1,18 @@
 module Gipper
   class Answers < Array
+    def initialize text
+      answer_parser = Gipper::AnswerParser.new
+      answer = answer_parser.parse text, self
+    end
+    
+    
     def style
       if self.length == 1 && !self[0].has_key?(:text)
         return :true_false
+      end
+      
+      if self[0][:correct].class == String
+        return :matching
       end
       
       true_count = 0

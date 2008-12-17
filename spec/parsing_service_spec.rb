@@ -77,6 +77,16 @@ describe Gipper::ParsingService do
     end
   end
   
+  describe "when passed a question with escaped brackets" do
+    it "should ignore the brackets" do
+      output = @parser.parse(' foo \\{escaped bracketed text\\}{T}')
+      output.length.should eql(1)
+      output[0][:question].should eql("foo {escaped bracketed text}")
+      output[0][:answer].style.should eql(:true_false)
+      output[0][:answer][0][:correct].should eql(:true)
+    end
+  end
+  
   describe "(when passed more than one question)" do
     
     before(:each) do

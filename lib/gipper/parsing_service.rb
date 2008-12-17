@@ -59,10 +59,17 @@ module Gipper
     
     def split_question_from_answer text
       text.strip!
-      reg = Regexp.new('^([^\{\}]+)\{(.+)\}$', Regexp::MULTILINE)
-      matches = reg.match text
+      
+      reg = Regexp.new('\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
+      matches = text.reverse.match(reg)
+      
+      answer = matches[1].reverse
+      question = matches[2].reverse
 
-      [question = matches[1].strip, question = matches[2].strip]
+      #reg = Regexp.new('^([^\{\}]+)\{(.+)\}$', Regexp::MULTILINE)
+      #matches = reg.match text
+
+      [question, answer]
     end
     
     def question_type text

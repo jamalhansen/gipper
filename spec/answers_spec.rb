@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), *%w[spec_helper.rb])
 
-describe Gipper::AnswerParser do
+describe Gipper::Answers do
 
   it "should return a style of true_false when it has one answer of true and no text" do
     answers = Gipper::Answers.new("T")

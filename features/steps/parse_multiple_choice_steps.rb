@@ -6,7 +6,6 @@ Given /^a GIFT file of multiple choice questions$/ do
 end
 
 Then /^contains the correct multiple choice questions$/ do
-    puts @questions
   @questions.length.should be(6)
 
 

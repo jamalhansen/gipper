@@ -28,17 +28,26 @@ module Gipper
       title, question_text = strip_title(question)
       question_hash = {}
       question_hash[:title] = title
-      question_hash[:question] = question_text
+      question_hash[:question] = strip_escapes(question_text)
       question_hash[:answer] = Gipper::Answers.new(answer)
       
       in_array << question_hash
     end
     
+    def strip_escapes text
+      text.gsub!(/\\~/, '~')
+      text.gsub!(/\\=/, '=')
+      text.gsub!(/\\#/, '#')
+      text.gsub!(/\\\{/, '{')
+      text.gsub!(/\\\}/, '}')
+      text
+    end
+     
     def strip_title question
       question.strip!
       
       title = nil
-      reg = Regexp.new('^:{2}([^:{2}]+):{2}(.*)$', Regexp::MULTILINE)
+      reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)
       parts = reg.match question
       
       if parts

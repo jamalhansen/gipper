@@ -1,23 +1,21 @@
 module Gipper
   class AnswerParser
-    def parse text, answers
-      if can_parse? text
-        return extract_answers_from(text, answers)
+    def parse answer, answers
+      if can_parse_as_true_false? answer
+        return (answers << extract_true_false_answer_from(answer))
+      end
+
+      split_apart answer do |clause|
+        obj = {}
+        parse_clause clause, obj
+        answers << obj
       end
       
-      if can_parse_as_true_false? text
-        return extract_true_false_answers_from(text, answers)
-      end
-      
-      throw "could not parse text."
+      answers
     end
     
-    def extract_true_false_answers_from text, answers
-        h = Hash.new
-        h[:correct] = is_a_true text
-        answers << h
-        
-        return answers  
+    def extract_true_false_answer_from answer
+      {:correct => (is_a_true answer)}
     end
     
     def is_a_true answer
@@ -30,8 +28,7 @@ module Gipper
     
     def can_parse? text
       return false if text.nil?
-            
-      !(text.strip =~ /^([~=][^~=]+)+$/).nil?
+      !(text.strip =~ /^([~=]([^~=]|\\[~=])+)+$/).nil?
     end
     
     def can_parse_as_true_false? answer
@@ -40,38 +37,34 @@ module Gipper
       !(answer.downcase.strip =~ /^(t|f|true|false)$/).nil?
     end
     
-    # tail recursive function to parse answers
-    def extract_answers_from answer, answers
-      head, tail = split_head_from answer 
-      return answers if head.nil?
+    # Iterates through the answer clauses
+    def split_apart clauses
+      reg = Regexp.new('.*?(?:[~=])(?!\\\\)', Regexp::MULTILINE)
       
-      obj = {}
-      parse_clause head, obj
-      answers << obj
+      # need to use reverse since Ruby 1.8 has look ahead, but not look behind
+      matches =  clauses.reverse.scan(reg).reverse.map {|clause| clause.strip.reverse}
 
-      extract_answers_from tail, answers
-    end
-    
-    # splits the head from the remaining clauses
-    def split_head_from clauses
-      clauses.strip!
-      matches = /^([~=][^~=]+)(([~=][^~=]+)*)$/.match clauses
-      
-      return [matches[1], matches[2]] if matches
-      return [nil, nil]
+      matches.each do |match|
+        yield match
+      end
     end
 
-    ###############################################
     def split_correct clause
-      reg = Regexp.new('^([~=])([^\-\>]+)(\-\>(.*))?$', Regexp::MULTILINE)
-      matches = reg.match clause
+      # need to strip first character before regex
+      correct, rest  = clause.split(//, 2)   
+      
+      reg = Regexp.new('(.*)\-\>(.*)', Regexp::MULTILINE)
+      matches = reg.match rest
+ 
+      if matches
+        text = matches[1].strip
+        correct_answer = matches[2].strip 
 
-      correct_answer = eval_correctness matches[1]
-      text = matches[2].strip
-      matching = matches[4].strip if matches[4]
+        return [text, correct_answer]
+      end
 
-      return [text, matching] if !matching.nil?
-      return [text, correct_answer]
+      correct_answer = eval_correctness correct
+      return [rest.strip, correct_answer]
     end
     
     def eval_correctness indicator
@@ -80,18 +73,38 @@ module Gipper
     end
     
     def parse_clause text, to_hash
-      text, to_hash[:correct] = split_correct text
-      to_hash[:text], to_hash[:comment] = split_comment(text) # for mutliple choice we need to strip comments
+
+      puts text
       
+      text, to_hash[:correct] = split_correct text
+      to_hash[:text], to_hash[:comment] = split_comment(text)
+
+      puts to_hash.inspect
       to_hash
     end
     
     def split_comment answer_text
-      reg = Regexp.new('^(.*)#(.*)$', Regexp::MULTILINE)
-      matches = reg.match answer_text
+
+      reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
+      matches = answer_text.reverse.split(reg).map {|ss| ss.reverse} 
       
-      return [matches[1].strip, matches[2].strip] if matches
-      return [answer_text, nil]
+      if matches.length > 1
+        comment = matches[0].strip
+        text = matches[1].strip
+      else
+        text = matches[0].strip
+      end
+    
+      return [strip_escapes(text), comment]
     end
+    
+    def strip_escapes text
+      text.gsub!(/\\~/, '~')
+      text.gsub!(/\\=/, '=')
+      text.gsub!(/\\#/, '#')
+      text.gsub!(/\\\{/, '{')
+      text.gsub!(/\\\}/, '}')
+      text
+     end
   end
 end

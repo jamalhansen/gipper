@@ -6,31 +6,31 @@ module Gipper
       gift_questions.strip!
 
       array = []
-      return array if gift_questions.nil?
       
-      list = gift_questions.split(/[\r\n][\r\n\t]*[\r\n]/)
-      parse_questions list, array
+      iterate_through gift_questions do |question|
+        question, answer = split_question_from_answer question
+        array << format_both(question, answer)
+      end
+      
+      array
     end
     
-    def parse_questions gift_questions, array
-      return array if gift_questions.length == 0
-
-      head = gift_questions.first 
-      tail = gift_questions[1..gift_questions.length - 1]
+    def iterate_through questions
+      list = questions.split(/[\r\n][\r\n\t]*[\r\n]/)
       
-      question, answer = split_question_from_answer head
-      
-      parse_questions tail, array_with_added(question, answer, array)
+      list.each do |item|
+        yield item
+      end
     end
     
-    def array_with_added question, answer, in_array
+    def format_both question, answer
       title, question_text = strip_title(question)
       question_hash = {}
       question_hash[:title] = title
       question_hash[:question] = strip_escapes(question_text)
       question_hash[:answer] = Gipper::Answers.new(answer)
       
-      in_array << question_hash
+      question_hash
     end
     
     def strip_escapes text
@@ -61,7 +61,7 @@ module Gipper
       text.strip!
       reg = Regexp.new('^([^\{\}]+)\{(.+)\}$', Regexp::MULTILINE)
       matches = reg.match text
-      #matches = /^([^\{\}]+)\{(.+)\}$/.match text
+
       [question = matches[1].strip, question = matches[2].strip]
     end
     

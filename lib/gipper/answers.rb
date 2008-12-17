@@ -53,11 +53,6 @@ module Gipper
       return :false
     end
     
-    def can_parse? text
-      return false if text.nil?
-      !(text.strip =~ /^([~=]([^~=]|\\[~=])+)+$/).nil?
-    end
-    
     def can_parse_as_true_false? answer
       return false if answer.nil?
 

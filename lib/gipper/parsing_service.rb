@@ -8,8 +8,8 @@ module Gipper
       array = []
       
       iterate_through gift_questions do |question|
-        question, answer = split_question_from_answer question
-        array << format_both(question, answer)
+        question, answer, question_post = split_question_from_answer question
+        array << write_question(question, answer, question_post)
       end
       
       array
@@ -23,22 +23,25 @@ module Gipper
       end
     end
     
-    def format_both question, answer
+    def write_question question, answer, question_post
       title, question_text = strip_title(question)
       question_hash = {}
       question_hash[:title] = title
       question_hash[:question] = strip_escapes(question_text)
-      question_hash[:answer] = Gipper::Answers.new(answer)
+      question_hash[:question_post] = strip_escapes(question_post)
+      question_hash[:answer] = Gipper::Answers.new(answer, question_post)
       
       question_hash
     end
     
     def strip_escapes text
-      text.gsub!(/\\~/, '~')
-      text.gsub!(/\\=/, '=')
-      text.gsub!(/\\#/, '#')
-      text.gsub!(/\\\{/, '{')
-      text.gsub!(/\\\}/, '}')
+      if !text.nil?
+        text.gsub!(/\\~/, '~')
+        text.gsub!(/\\=/, '=')
+        text.gsub!(/\\#/, '#')
+        text.gsub!(/\\\{/, '{')
+        text.gsub!(/\\\}/, '}')
+      end
       text
     end
      
@@ -60,16 +63,15 @@ module Gipper
     def split_question_from_answer text
       text.strip!
       
-      reg = Regexp.new('\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
+      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
       matches = text.reverse.match(reg)
       
-      answer = matches[1].reverse
-      question = matches[2].reverse
+      question_post = matches[1].strip.reverse
+      question_post = nil if question_post == ""
+      answer = matches[2].reverse
+      question = matches[3].reverse        
 
-      #reg = Regexp.new('^([^\{\}]+)\{(.+)\}$', Regexp::MULTILINE)
-      #matches = reg.match text
-
-      [question, answer]
+      [question, answer, question_post]
     end
     
     def question_type text

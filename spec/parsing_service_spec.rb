@@ -85,6 +85,17 @@ describe Gipper::ParsingService do
       output[0][:answer].style.should eql(:true_false)
       output[0][:answer][0][:correct].should eql(:true)
     end
+    
+    
+    it "should handle all kinds of escaped stuff" do
+      output = @parser.parse(' my crazy \#\~\= question \{escaped bracketed text\}{=\=\#\~foo#hi-yah}')
+      output.length.should eql(1)
+      output[0][:question].should eql("my crazy #~= question {escaped bracketed text}")
+      output[0][:answer].style.should eql(:short_answer)
+      output[0][:answer][0][:correct].should eql(:true)
+      output[0][:answer][0][:text].should eql('=#~foo')
+      output[0][:answer][0][:comment].should eql('hi-yah')
+    end
   end
   
   describe "(when passed more than one question)" do

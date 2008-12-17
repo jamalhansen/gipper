@@ -1,12 +1,17 @@
 module Gipper
   class Answers < Array
-    def initialize text
+    def initialize text, question_post=nil
+      @question_post = question_post
       parse text
     end
     
     def style
       if self.length == 1 && !self[0].has_key?(:text)
         return :true_false
+      end
+      
+      if !@question_post.nil?
+        return :missing_word
       end
       
       if self[0][:correct].class == String
@@ -42,7 +47,7 @@ module Gipper
     end
     
     def extract_true_false_answer_from answer
-      {:correct => (is_a_true answer)}
+      {:correct => (is_a_true answer), :has_post => false}
     end
     
     def is_a_true answer

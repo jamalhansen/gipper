@@ -4,7 +4,7 @@ describe Gipper::Answers do
 
   describe "parsing true false questions" do
     it "should be tolerant of input errors" do
-      output = Gipper::Answers.new(" T")
+      output = Gipper::Answers.new(" T" )
       output[0][:correct].should eql(:true)
       
       output = Gipper::Answers.new("TrUE ")
@@ -151,6 +151,34 @@ describe Gipper::Answers do
       answers[0][:correct].class.should eql(String)
       answers[0][:correct].should eql("smiley")
       answers[0][:text].should eql(":)")
+    end
+    
+    it "should return missing word when question_post is present" do
+      parser = Gipper::ParsingService.new
+      data = parser.parse "foo {=bar} cheese."
+      data[0][:question].should eql("foo")
+      data[0][:question_post].should eql("cheese.")
+      
+      answers = data[0][:answer]
+      answers.style.should eql(:missing_word)
+      answers[0][:correct].should eql(:true)
+      answers[0][:text].should eql("bar")
+    end
+    
+    it "should return just a question mark for question_post when question_post is just a question mark" do
+      parser = Gipper::ParsingService.new
+      data = parser.parse('You say that, "money is the root of all evil", I ask you "what is the root of all {~honey ~bunnies =money}?"')
+      data[0][:question].should eql('You say that, "money is the root of all evil", I ask you "what is the root of all')
+      data[0][:question_post].should eql('?"')
+      
+      answers = data[0][:answer]
+      answers.style.should eql(:missing_word)
+      answers[0][:correct].should eql(:false)
+      answers[0][:text].should eql("honey")
+      answers[1][:correct].should eql(:false)
+      answers[1][:text].should eql("bunnies")
+      answers[2][:correct].should eql(:true)
+      answers[2][:text].should eql("money")
     end
   end
 end

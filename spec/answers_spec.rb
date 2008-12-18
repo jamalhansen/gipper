@@ -180,6 +180,30 @@ describe Gipper::Answers do
       answers[2][:correct].should eql(:true)
       answers[2][:text].should eql("money")
     end
+    
+    it "should understand numerical answer format" do
+      answers = Gipper::Answers.new("#2000:3")
+      answers.style.should eql(:numerical)
+      answers.length.should eql(1)
+      answers[0][:correct].should eql(2000)
+      answers[0][:range].should eql(3)
+      answers[0][:weight].should eql(100)
+      answers[0][:comment].should eql(nil)
+    end
+    
+    it "should understand multiple numerical answer format" do
+      answers = Gipper::Answers.new("# =2000:0 #Whoopdee do! =%50%2000:3 #Yippers")
+      answers.style.should eql(:numerical)
+      answers.length.should eql(2)
+      answers[0][:correct].should eql(2000)
+      answers[0][:range].should eql(0)
+      answers[0][:weight].should eql(100)
+      answers[0][:comment].should eql("Whoopdee do!")
+      answers[1][:correct].should eql(2000)
+      answers[1][:range].should eql(3)
+      answers[1][:weight].should eql(50)
+      answers[1][:comment].should eql("Yippers")
+    end
   end
 end
   

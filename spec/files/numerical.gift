@@ -1,0 +1,10 @@
+When was Harvey D. Smith born?{#1945:5}
+
+//this comment will be ignored in the import process 
+::Numerical example::
+When was Elizabeth M. Danson born? {#
+    =1993:0      #Correct!  you will get full credit for this answer
+    =%50%1993:2  #She was born in 1993.
+                 You get 50% credit for being close.
+}
+

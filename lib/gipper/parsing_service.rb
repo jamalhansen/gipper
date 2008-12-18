@@ -8,8 +8,7 @@ module Gipper
       array = []
       
       iterate_through gift_questions do |question|
-        question, answer, question_post = split_question_from_answer question
-        array << write_question(question, answer, question_post)
+        array << write_question(question)
       end
       
       array
@@ -23,61 +22,34 @@ module Gipper
       end
     end
     
-    def write_question question, answer, question_post
-      title, question_text = strip_title(question)
-      question_hash = {}
-      question_hash[:title] = title
-      question_hash[:question] = strip_escapes(question_text)
-      question_hash[:question_post] = strip_escapes(question_post)
-      question_hash[:answer] = Gipper::Answers.new(answer, question_post)
+    def write_question text
+      values = {:question_post => nil}
       
-      question_hash
+      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
+      matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
+      
+      values[:question_post] = strip_escapes(matches[0]) if !matches[0].empty?
+      values[:answer] = Gipper::Answers.new(matches[1], !values[:question_post].nil?)
+      values[:title], question = strip_title(matches[2])
+      values[:question] = strip_escapes(question)
+      
+      values
     end
     
     def strip_escapes text
-      if !text.nil?
-        text.gsub!(/\\~/, '~')
-        text.gsub!(/\\=/, '=')
-        text.gsub!(/\\#/, '#')
-        text.gsub!(/\\\{/, '{')
-        text.gsub!(/\\\}/, '}')
-      end
-      text
+      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
     end
      
     def strip_title question
-      question.strip!
+      reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)      
+      parts = reg.match(question.strip)            
       
-      title = nil
-      reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)
-      parts = reg.match question
-      
-      if parts
-        title = parts[1].strip
-        question = parts[2]
-      end
-      
+      if parts        
+        title = parts.captures[0].strip        
+        question = parts.captures[1]      
+      end            
+     
       return [title, question.strip]
-    end
-    
-    def split_question_from_answer text
-      text.strip!
-      
-      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
-      matches = text.reverse.match(reg)
-      
-      question_post = matches[1].strip.reverse
-      question_post = nil if question_post == ""
-      answer = matches[2].reverse
-      question = matches[3].reverse        
-
-      [question, answer, question_post]
-    end
-    
-    def question_type text
-      question, answer = split_question_from_answer text
-      return :true_false if Gipper::TrueFalseAnswerParser.can_parse? answer
-      return :multiple_choice if Gipper::AnswerParser.can_parse? answer
     end
   end
 end

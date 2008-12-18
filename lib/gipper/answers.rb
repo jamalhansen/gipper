@@ -1,16 +1,18 @@
 module Gipper
   class Answers < Array
-    def initialize text, question_post=nil
+    def initialize text, question_post=false
       @question_post = question_post
       parse text
     end
     
     def style
+      return :numerical if @numerical
+            
       if self.length == 1 && !self[0].has_key?(:text)
         return :true_false
       end
       
-      if !@question_post.nil?
+      if @question_post
         return :missing_word
       end
       
@@ -39,11 +41,52 @@ module Gipper
         return (self << extract_true_false_answer_from(answer))
       end
 
-      split_apart answer do |clause|
-        obj = {}
-        parse_clause clause, obj
-        self << obj
+      # => # indicates that this is a numerical answer
+      if answer[0] == 35 
+        @numerical = true
+        
+        if !answer.include? "="
+          self <<  parse_numerical_clause(answer[1..answer.length])
+          return
+        end
       end
+      
+      split_apart answer do |clause|
+        if @numerical
+          self << parse_numerical_clause(clause) 
+        else
+          self << parse_clause(clause)
+        end
+      end
+    end
+    
+    def parse_numerical_clause text
+      to_hash = {}
+      correct, range = text.split(":", 2)
+      range, comment = split_comment range
+      correct.gsub!("=", "")
+      weight = 100
+      
+      matches = correct.match(/%(\d+)%(\d+)/)
+      if matches
+        weight = matches.captures[0].to_i
+        correct = matches.captures[1].to_i
+      end
+
+      to_hash[:weight] = weight
+      to_hash[:comment] = comment
+      to_hash[:correct] = correct.to_i
+      to_hash[:range] = range.to_i
+      to_hash
+    end
+    
+        
+    def parse_clause text
+      to_hash = {}
+      text, to_hash[:correct] = split_correct text
+      to_hash[:text], to_hash[:comment] = split_comment(text)
+
+      to_hash
     end
     
     def extract_true_false_answer_from answer
@@ -99,13 +142,6 @@ module Gipper
       return :false
     end
     
-    def parse_clause text, to_hash
-      text, to_hash[:correct] = split_correct text
-      to_hash[:text], to_hash[:comment] = split_comment(text)
-
-      to_hash
-    end
-    
     def split_comment answer_text
 
       reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
@@ -122,13 +158,8 @@ module Gipper
     end
     
     def strip_escapes text
-      text.gsub!(/\\~/, '~')
-      text.gsub!(/\\=/, '=')
-      text.gsub!(/\\#/, '#')
-      text.gsub!(/\\\{/, '{')
-      text.gsub!(/\\\}/, '}')
-      text
-     end
+      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
+    end
     
   end
 end

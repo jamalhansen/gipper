@@ -15,6 +15,8 @@ module Gipper
     end
       
     def iterate_through questions
+      questions.gsub! /^\s*\\.*$/, ""  # strip out comment lines
+      
       list = questions.split(/[\r\n][\r\n\t]*[\r\n]/)
       
       list.each do |item|

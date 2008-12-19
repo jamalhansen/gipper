@@ -112,7 +112,7 @@ describe Gipper::Quiz do
       @a3 = "{T}"
       @t3 = "Accessories in the Pacific Northwest"
 
-      multiple_input = "\r\n\r\n\\r\n#{true_false_question(@t1, @q1, @a1)}\r\n\r\n#{true_false_question(@t2, @q2, @a2)}\r\n\r\n#{true_false_question(@t3, @q3, @a3)}"
+      multiple_input = "\r\n\r\n\\r\n#{true_false_question(@t1, @q1, @a1)}\r\n\\\\this is a \r\n\\\\couple rows of comments\r\n\r\n#{true_false_question(@t2, @q2, @a2)}\r\n\r\n#{true_false_question(@t3, @q3, @a3)}"
       @quiz = Gipper::Quiz.parse(multiple_input)
     end
   

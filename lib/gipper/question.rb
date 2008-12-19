@@ -1,11 +1,24 @@
 module Gipper
   class Question
-    def Question.parse text
+    def self.parse text
       Question.new text
     end
+   
+    attr_reader :text_post, :answer, :title, :text, :style
     
-        
-    def style
+    private
+    def initialize text
+      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
+      matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
+      
+      @text_post = strip_escapes(matches[0]) if !matches[0].empty?
+      @answer = Gipper::Answers.new(matches[1], !@text_post.nil?)
+      @title, question = strip_title(matches[2])
+      @text = strip_escapes(question)
+      @style = find_style
+    end
+    
+    def find_style
       return :numerical if @answer.numerical
             
       if @answer.length == 1 && @answer[0].text.nil?
@@ -33,19 +46,6 @@ module Gipper
         return :short_answer
       end
       
-    end
-    
-    attr_reader :text_post, :answer, :title, :text
-    
-    private
-    def initialize text
-      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
-      matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
-      
-      @text_post = strip_escapes(matches[0]) if !matches[0].empty?
-      @answer = Gipper::Answers.new(matches[1], !@text_post.nil?)
-      @title, question = strip_title(matches[2])
-      @text = strip_escapes(question)
     end
     
     def strip_escapes text

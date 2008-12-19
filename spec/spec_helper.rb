@@ -7,7 +7,7 @@ rescue LoadError
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib/gipper')
-require 'parsing_service'
+require 'quiz'
 
 def true_false_question title, question, answer
   if title

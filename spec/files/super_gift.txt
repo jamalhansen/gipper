@@ -1,0 +1,168 @@
+// Basic GIFT questions
+// GIFT filter and documentation by Paul Tsuchido Shew http://ac.shew.jp.
+//---------------------------
+
+Who's buried in Grant's tomb?{~Grant ~Jefferson =no one}
+
+Grant is {~buried =entombed ~living} in Grant's tomb.
+
+//----------------------------------
+// Formatting
+//----------------------------------
+The American holiday of Thanksgiving is celebrated on the {
+   ~second
+   ~third
+   =fourth
+} Thursday of November.
+
+Japanese characters originally came from what country? {
+   ~India
+   =China
+   ~Korea
+   ~Egypt}
+         
+         
+Who's buried in Grant's tomb?{=no one =nobody}
+
+Two plus two equals {=four =4}
+
+Four plus one equals {5}
+
+Three plus {2} equals five.
+
+Grant is buried in Grant's tomb.{F}
+
+    The sun rises in the east.{T}
+   
+// ------------------------------------------
+// Matching
+// There must be at least three matching pairs.
+// Matching questions do not support feedback or percentage answer weights.
+// ------------------------------------------
+
+     Matching Question. {
+         =subquestion1 -> subanswer1
+         =subquestion2 -> subanswer2
+         =subquestion3 -> subanswer3
+         }
+     
+     Match the following countries with their corresponding capitals. {
+         =Canada -> Ottawa
+         =Italy  -> Rome
+         =Japan  -> Tokyo
+         =India  -> New Delhi
+         }
+
+// ------------------------------------------
+// Numerical
+// ------------------------------------------
+
+     When was Ulysses S. Grant born? {#1822}
+
+     What is the value of pi (to 3 decimal places)? {#3.1415:0.0005}
+
+     What is the value of pi (to 3 decimal places)? {#3.141..3.142}
+
+     When was Ulysses S. Grant born? {#
+         =1822:0
+         =%50%1822:2}
+
+
+//Line Comments:
+
+// Subheading: Numerical questions below
+What's 2 plus 2? {#4}
+     
+//Question Name:
+::Kanji Origins::Japanese characters originally
+came from what country? {=China}
+
+ ::Thanksgiving Date::The American holiday of Thanksgiving is 
+ celebrated on the {~second ~third =fourth} Thursday of November.
+
+//Feedback:
+
+     What's the answer to this multiple-choice question?{
+     ~wrong answer#feedback comment on the wrong answer
+     ~another wrong answer#feedback comment on this wrong answer
+     =right answer#Very good!}
+     
+     Who's buried in Grant's tomb?{
+     =no one#excellent answer!
+     =nobody#excellent answer!}
+     
+     Grant is buried in Grant's tomb.{FALSE#No one is buried in Grant's tomb.}
+
+//Percentage Answer Weights:
+//Percentage answer weights are available for both Multiple Choice and Short Answer questions. Percentage answer weights can be included by following the tilde (for Multiple Choice) or equal sign (for Short Answer) with the desired percent enclosed within percent signs (e.g., %50%). 
+//This option can be combined with feedback comments.
+
+     Difficult question.{~wrong answer ~%50%half credit answer =full credit answer}
+          
+     ::Jesus' hometown::Jesus Christ was from {
+     ~Jerusalem#This was an important city, but the wrong answer.
+     ~%25%Bethlehem#He was born here, but not raised here.
+     ~%50%Galilee#You need to be more specific.
+     =Nazareth#Yes! That's right!}.
+     
+     ::Jesus' hometown:: Jesus Christ was from {
+     =Nazareth#Yes! That's right!
+     =%75%Nazereth#Right, but misspelled.
+     =%25%Bethlehem#He was born here, but not raised here.}
+
+//Specify text-formatting for the question
+//The question text (only) may have an optional text format specified. 
+//Currently the available formats are moodle (Moodle Auto-Format), html (HTML format), plain (Plain text format) and markdown (Markdown format). 
+//The format is specified in square brackets immediately before the question text. More information on text formats in Moodle.
+
+[markdown]The *American holiday of Thanksgiving* is celebrated on the {
+         ~second
+         ~third
+         =fourth
+     } Thursday of November.    
+     
+//Multiple Answers:
+//The Multiple Answers option is used for multiple choice questions when 
+//two or more answers must be selected in order to obtain full credit. 
+//The multiple answers option is enabled by assigning partial answer weight to
+//multiple answers, while allowing no single answer to receive full credit.
+
+     What two people are entombed in Grant's tomb? {
+          ~No one
+          ~%50%Grant
+          ~%50%Grant's wife
+          ~Grant's father }Note that there is no equal sign (=) in any answer and the answers should total no more than 100%, otherwise Moodle will return an error. To avoid the problem of students automatically getting 100% by simply checking all of the answers, it is best to include negative answer weights for wrong answers.
+
+     What two people are entombed in Grant's tomb? {
+          ~%-50%No one
+          ~%50%Grant
+          ~%50%Grant's wife
+          ~%-50%Grant's father }
+          
+//Special Characters ~ = # { } :
+//These symbols ~ = # { } control the operation of this filter 
+//and cannot be used as normal text within questions. 
+//Since these symbols have a special role in determining the 
+//operation of this filter, they are called "control characters." 
+//But sometimes you may want to use one of these characters, 
+//for example to show a mathematical formula in a question. 
+//The way to get around this problem is "escaping" the control characters.
+//This means simply putting a backslash (\) before a control character 
+//so the filter will know that you want to use it as a literal character 
+//instead of as a control character. For example:
+
+     Which answer equals 5? {
+          ~ \= 2 + 2
+          = \= 2 + 3
+          ~ \= 2 + 4  }
+
+     ::GIFT Control Characters::
+     Which of the following is NOT a control character for the GIFT import format? {
+        ~ \~     # \~ is a control character.
+        ~ \=     # \= is a control character.
+        ~ \#     # \# is a control character.
+        ~ \{     # \{ is a control character.
+        ~ \}     # \} is a control character.
+        = \     # Correct! \ (backslash) is not a control character. BUT,
+                   it is used to escape the control characters.
+     }

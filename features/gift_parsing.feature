@@ -1,4 +1,4 @@
-Story: Parsing missing word questions
+Story: Parsing a GIFT File with multiple formats
   As a developer
   I want to parse a GIFT file
   So that I can use the data in my application

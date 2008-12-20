@@ -15,12 +15,13 @@ module Gipper
     end
       
     def iterate_through questions
-      questions.gsub! /^\s*\\.*$/, ""  # strip out comment lines
+      questions.gsub! /^\s*\/\/.*$/, ""  # strip out comment lines
       
-      list = questions.split(/[\r\n][\r\n\t]*[\r\n]/)
-      
+      list = questions.split /[\r\n][\r\n\t]*[\r\n]/
       list.each do |item|
-        yield item
+        if item != ''
+          yield item 
+        end
       end
     end
   end

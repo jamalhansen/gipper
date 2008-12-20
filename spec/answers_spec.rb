@@ -1,35 +1,6 @@
 require File.join(File.dirname(__FILE__), *%w[spec_helper.rb])
 
 describe Gipper::Answers do
-
-  describe "parsing true false questions" do
-    it "should be tolerant of input errors" do
-      output = Gipper::Answers.new(" T" )
-      output[0].correct.should eql(:true)
-      
-      output = Gipper::Answers.new("TrUE ")
-      output[0].correct.should eql(:true)
-      
-      output = Gipper::Answers.new(" true")
-      output[0].correct.should eql(:true)
-      
-      output = Gipper::Answers.new(" t ")
-      output[0].correct.should eql(:true)
-      
-      output = Gipper::Answers.new("F ")
-      output[0].correct.should eql(:false)
-      
-      output = Gipper::Answers.new("  false ")
-      output[0].correct.should eql(:false)
-      
-      output = Gipper::Answers.new(" faLse")
-      output[0].correct.should eql(:false)
-      
-      output = Gipper::Answers.new(" f ")
-      output[0].correct.should eql(:false)
-    end
-  end
-  
   it "should identify matching questions and place the match into correct" do
     output = Gipper::Answers.new("=waffle -> cone =cheese -> cheddar")
     output.length.should eql(2)

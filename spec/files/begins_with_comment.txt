@@ -1,0 +1,6 @@
+// Basic GIFT questions
+// GIFT filter and documentation by Paul Tsuchido Shew http://ac.shew.jp.
+//---------------------------
+
+1=1{T}
+

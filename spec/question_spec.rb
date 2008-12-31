@@ -117,7 +117,7 @@ describe Gipper::Question do
     end
     
     it "should return missing word when question_post is present" do
-      question = Gipper::Question.new "foo {=bar} cheese."
+      question = Gipper::Question.parse "foo {=bar} cheese."
       question.text.should eql("foo")
       question.text_post.should eql("cheese.")
       question.style.should eql(:missing_word)

@@ -78,7 +78,7 @@ describe Gipper::Answers do
   end
   
   it "should return just a question mark for question_post when question_post is just a question mark" do
-    quiz = Gipper::Quiz.new 'You say that, "money is the root of all evil", I ask you "what is the root of all {~honey ~bunnies =money}?"'
+    quiz = Gipper::Quiz.parse 'You say that, "money is the root of all evil", I ask you "what is the root of all {~honey ~bunnies =money}?"'
     quiz[0].text.should eql('You say that, "money is the root of all evil", I ask you "what is the root of all')
     quiz[0].text_post.should eql('?"')
     

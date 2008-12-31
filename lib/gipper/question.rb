@@ -1,13 +1,14 @@
 module Gipper
   class Question
     def self.parse text
-      Question.new text
+      question = Question.new
+      question.read text
+      question
     end
    
     attr_reader :text_post, :answer, :title, :text, :style
     
-    private
-    def initialize text
+    def read text
       reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
       matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
       
@@ -18,6 +19,7 @@ module Gipper
       @style = find_style
     end
     
+    private
     def find_style
       return :numerical if @answer.numerical
             

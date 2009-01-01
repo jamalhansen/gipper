@@ -1,5 +1,6 @@
 module Gipper
   class Question
+    # Parses a single question and returns an instance of itself with the data
     def self.parse text
       question = Question.new
       question.read text
@@ -8,20 +9,28 @@ module Gipper
    
     attr_reader :text_post, :answer, :title, :text, :style
     
+    # instance method to parse the question
     def read text
       reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
       matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
       
       @text_post = strip_escapes(matches[0]) if !matches[0].empty?
-      @answer = Gipper::Answers.new(matches[1], !@text_post.nil?)
+      
+      answer = matches[1]
+      @style_hint = nil
+      if answer[0] == 35 
+        @style_hint = :numerical
+        answer = answer[1..answer.length]
+      end
+      
+      @answer = Gipper::Answers.parse(answer, @style_hint)
       @title, question = strip_title(matches[2])
       @text = strip_escapes(question)
       @style = find_style
     end
     
-    private
     def find_style
-      return :numerical if @answer.numerical
+      return @style_hint if @style_hint
             
       if @answer.length == 1 && @answer[0].text.nil?
         return :true_false

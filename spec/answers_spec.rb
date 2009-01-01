@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), *%w[spec_helper.rb])
 
 describe Gipper::Answers do
   it "should identify matching questions and place the match into correct" do
-    output = Gipper::Answers.new("=waffle -> cone =cheese -> cheddar")
+    output = Gipper::Answers.parse("=waffle -> cone =cheese -> cheddar")
     output.length.should eql(2)
     output[0].text.should eql("waffle")
     output[0].correct.should eql("cone")
@@ -11,7 +11,7 @@ describe Gipper::Answers do
   end
   
   it "should parse a multiple choice answer" do
-    output = Gipper::Answers.new("=Travel to the moon ~play tennis ~eat apples ~play fable 2 ~code in Assembly ")
+    output = Gipper::Answers.parse("=Travel to the moon ~play tennis ~eat apples ~play fable 2 ~code in Assembly ")
     output.length.should eql(5)
     output[0].text.should eql("Travel to the moon")
     output[0].correct.should eql(:true)
@@ -26,7 +26,7 @@ describe Gipper::Answers do
   end
   
   it "should be tolerant of input variance" do
-    output = Gipper::Answers.new("  ~ %%%%%%% ~ UUUUUUUUU ~@@%^&* ~ 232323= 2345       ")
+    output = Gipper::Answers.parse("  ~ %%%%%%% ~ UUUUUUUUU ~@@%^&* ~ 232323= 2345       ")
     output.length.should eql(5)
     output[0].text.should eql("%%%%%%%")
     output[0].correct.should eql(:false)
@@ -41,7 +41,7 @@ describe Gipper::Answers do
   end
   
   it "should get answer conmments" do
-    output = Gipper::Answers.new("  ~ %%%%%%%#foo = UUUUUUUUU #bar")
+    output = Gipper::Answers.parse("  ~ %%%%%%%#foo = UUUUUUUUU #bar")
     output.length.should eql(2)
     output[0].text.should eql("%%%%%%%")
     output[0].correct.should eql(:false)
@@ -52,7 +52,7 @@ describe Gipper::Answers do
   end
   
   it "should get answer conmments when preceeded by a new line" do
-    output = Gipper::Answers.new("  ~ Oompa\r\n#kun\r\n = Loompa\r\n #pyakun")
+    output = Gipper::Answers.parse("  ~ Oompa\r\n#kun\r\n = Loompa\r\n #pyakun")
     output.length.should eql(2)
     output[0].text.should eql("Oompa")
     output[0].correct.should eql(:false)
@@ -67,7 +67,7 @@ describe Gipper::Answers do
   # TeX expressions) you must "escape" them by preceding them with a \ 
   # directly in front of each { or } or =. 
   it "should ignore escaped characters" do
-    output = Gipper::Answers.new('~ \{\}\~\=\#foo =\{\}\~\=\#bar')
+    output = Gipper::Answers.parse('~ \{\}\~\=\#foo =\{\}\~\=\#bar')
     output.length.should eql(2)
     output[0].text.should eql("{}~=#foo")
     output[0].correct.should eql(:false)
@@ -92,7 +92,7 @@ describe Gipper::Answers do
   end
   
   it "should understand numerical answer format" do
-    answers = Gipper::Answers.new("#2000:3")
+    answers = Gipper::Answers.parse("2000:3", :numerical)
     answers.length.should eql(1)
     answers[0].correct.should eql(2000)
     answers[0].range.should eql(3)
@@ -101,7 +101,7 @@ describe Gipper::Answers do
   end
   
   it "should understand multiple numerical answer format" do
-    answers = Gipper::Answers.new("# =2000:0 #Whoopdee do! =%50%2000:3 #Yippers")
+    answers = Gipper::Answers.parse("=2000:0 #Whoopdee do! =%50%2000:3 #Yippers", :numerical)
     answers.length.should eql(2)
     answers[0].correct.should eql(2000)
     answers[0].range.should eql(0)

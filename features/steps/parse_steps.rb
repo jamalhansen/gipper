@@ -5,5 +5,5 @@ When(/^I tell gipper to parse the file$/)do
 end
 
 Then(/^I will get an array of questions and answers$/)do
-  @questions.class.should eql(Gipper::Quiz)
+  @questions.class.should eql(Array)
 end

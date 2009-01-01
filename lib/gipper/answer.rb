@@ -2,50 +2,51 @@ module Gipper
   class Answer
     attr_reader :weight, :correct, :comment, :range, :text
     
-    def initialize text, style_hint = nil
-      case style_hint
-      when :numerical
-        parse_numerical text
-      else
-        parse text
-      end
+    def self.parse text, style_hint = nil
+      style_hint = :true_false if !style_hint && can_parse_as_true_false?(text)
       
+      answer = Answer.new
+      answer.read text, style_hint
+      answer
     end
-    
-    private
-    def parse_numerical text
-      to_hash = {}
-      correct, range = text.split(":", 2)
-      range, comment = split_comment range
-      correct.gsub!("=", "")
-      weight = 100
-      
-      matches = correct.match(/%(\d+)%(\d+)/)
-      if matches
-        weight = matches.captures[0].to_i
-        correct = matches.captures[1].to_i
-      end
-
-      @weight = weight
-      @comment = comment
-      @correct = correct.to_i
-      @range = range.to_i
-     end
-    
-     def parse answer
-      if can_parse_as_true_false? answer
-        @correct = is_a_true answer
-        @has_post = false
-      else
-        text, @correct = split_correct answer
-        @text, @comment = split_comment(text)       
-      end
-    end
-    
-    def can_parse_as_true_false? answer
+        
+    def self.can_parse_as_true_false? answer
       return false if answer.nil?
 
       !(answer.downcase.strip =~ /^(t|f|true|false)$/).nil?
+    end
+
+    def read answer, style_hint
+      case style_hint
+      when :true_false
+        @correct = is_a_true answer
+      when :numerical
+        correct, range = answer.split(":", 2)
+        range, comment = split_comment range
+        correct.gsub!("=", "")
+        weight = 100
+
+        matches = correct.match(/%(\d+)%(\d+)/)
+        if matches
+          weight = matches.captures[0].to_i
+          correct = matches.captures[1].to_i
+        end
+
+        @weight = weight
+        @comment = comment
+        @correct = correct.to_i
+        @range = range.to_i
+      else
+        correct, text = split_correct answer
+
+        split_matching(text) do |t, c|
+          text, correct = t, c       
+        end
+
+        @text, @comment = split_comment(text)  
+        
+        @correct = correct
+      end
     end
     
     def is_a_true answer
@@ -57,32 +58,38 @@ module Gipper
     end
     
     def split_correct clause
-      # need to strip first character before regex
-      correct, rest  = clause.split(//, 2)   
+      correct = []
       
-      reg = Regexp.new('(.*)\-\>(.*)', Regexp::MULTILINE)
-      matches = reg.match rest
- 
-      if matches
-        text = matches[1].strip
-        correct_answer = matches[2].strip 
-
-        return [text, correct_answer]
+      if clause =~ /^[~=]/
+        correct[0] = eval_correctness(clause[0])
+        correct[1] = clause[1..clause.length].strip
+      else
+        correct[0] = clause
+        correct[1] = nil
       end
-
-      correct_answer = eval_correctness correct
-      return [rest.strip, correct_answer]
+      
+      return correct
     end
     
+    def split_matching answers
+      reg = Regexp.new('(.*)\-\>(.*)', Regexp::MULTILINE)
+      matches = reg.match answers
+      
+      if matches
+        yield matches.captures.map {|s| s.strip}
+      end
+    end
+
     def eval_correctness indicator
-      return :true if indicator == "="
-      return :false
+      { 61 => :true, 126 => :false}[indicator]
     end
     
     def split_comment answer_text
+      return [nil, nil] if answer_text.nil? || answer_text == ""
+      
       reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
       matches = answer_text.reverse.split(reg).map {|ss| ss.reverse} 
-      
+
       if matches.length > 1
         comment = matches[0].strip
         text = matches[1].strip

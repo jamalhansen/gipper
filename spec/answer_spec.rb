@@ -10,28 +10,28 @@ describe Gipper::Answer do
   describe "parsing true false questions" do
     it "should be tolerant of input variance" do
       output = Gipper::Answer.parse(" T" )
-      output.correct.should eql(:true)
+      output.correct.should eql(true)
       
       output = Gipper::Answer.parse("TrUE ")
-      output.correct.should eql(:true)
+      output.correct.should eql(true)
       
       output = Gipper::Answer.parse(" true")
-      output.correct.should eql(:true)
+      output.correct.should eql(true)
       
       output = Gipper::Answer.parse(" t ")
-      output.correct.should eql(:true)
+      output.correct.should eql(true)
       
       output = Gipper::Answer.parse("F ")
-      output.correct.should eql(:false)
+      output.correct.should eql(false)
       
       output = Gipper::Answer.parse("  false ")
-      output.correct.should eql(:false)
+      output.correct.should eql(false)
       
       output = Gipper::Answer.parse(" faLse")
-      output.correct.should eql(:false)
+      output.correct.should eql(false)
       
       output = Gipper::Answer.parse(" f ")
-      output.correct.should eql(:false)
+      output.correct.should eql(false)
     end
   end
 end

@@ -22,20 +22,29 @@ describe Gipper::Quiz do
   end
   
   describe "(when passed more than one question)" do
-    
-    before(:each) do
-      @q = []
-      @q << true_false_question("Weather Patterns in the Pacific Northwest", "Seattle is rainy.", "{T}")
-      @q << true_false_question("", "Seattle has lots of water.", "{T}")
-      @q << true_false_question("Accessories in the Pacific Northwest", "People in Seattle use umbrellas:", "{T}")
+    it "should return an array with questions" do
+      q = []
+      q << true_false_question("Weather Patterns in the Pacific Northwest", "Seattle is rainy.", "{T}")
+      q << true_false_question("", "Seattle has lots of water.", "{T}")
+      q << true_false_question("Accessories in the Pacific Northwest", "People in Seattle use umbrellas:", "{T}")
 
-      @multiple_input = "//opening comment\r\n//another comment\r\n\r\n\r\n#{@q[0]}\r\n//this is a \r\n//couple rows of comments\r\n\r\n#{@q[1]}\r\n\r\n#{@q[2]}"
-    end
-  
-    it "should return an array with a 3 elements" do
-      Gipper::Quiz.new.iterate_through(@multiple_input) do |q|
-        @q.include?(q).should eql(true)
+      multiple_input = "//opening comment\r\n//another comment\r\n\r\n\r\n#{q[0]}\r\n//this is a \r\n//couple rows of comments\r\n\r\n#{q[1]}\r\n\r\n#{q[2]}"
+
+      Gipper::Quiz.new.iterate_through(multiple_input) do |qu|
+        q.include?(qu).should eql(true)
       end
+    end
+    
+    it "ignore whitespace between questions" do
+      quiz = "a\r\n\t\r\nb\r\n      \r\nc\r\n\r\nd"
+      count = 0
+
+      Gipper::Quiz.new.iterate_through(quiz) do |qu|
+        expected = ['a', 'b', 'c', 'd']
+        qu.should eql(expected[count])  
+        count = count + 1        
+      end
+      count.should eql(4)
     end
   end
 end

@@ -51,10 +51,10 @@ module Gipper
     
     def is_a_true answer
       if !(answer.downcase.strip =~ /^(t|true)$/).nil?
-        return :true
+        return true
       end
       
-      return :false
+      return false
     end
     
     def split_correct clause
@@ -81,7 +81,7 @@ module Gipper
     end
 
     def eval_correctness indicator
-      { 61 => :true, 126 => :false}[indicator]
+      { 61 => true, 126 => false}[indicator]
     end
     
     def split_comment answer_text

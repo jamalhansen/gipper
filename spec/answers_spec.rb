@@ -14,14 +14,14 @@ describe Gipper::Answers do
     output = Gipper::Answers.parse("=Travel to the moon ~play tennis ~eat apples ~play fable 2 ~code in Assembly ")
     output.length.should eql(5)
     output[0].text.should eql("Travel to the moon")
-    output[0].correct.should eql(:true)
-    output[1].correct.should eql(:false)
+    output[0].correct.should eql(true)
+    output[1].correct.should eql(false)
     output[1].text.should eql("play tennis")
-    output[2].correct.should eql(:false)
+    output[2].correct.should eql(false)
     output[2].text.should eql("eat apples")
-    output[3].correct.should eql(:false)
+    output[3].correct.should eql(false)
     output[3].text.should eql("play fable 2")
-    output[4].correct.should eql(:false)
+    output[4].correct.should eql(false)
     output[4].text.should eql("code in Assembly")
   end
   
@@ -29,14 +29,14 @@ describe Gipper::Answers do
     output = Gipper::Answers.parse("  ~ %%%%%%% ~ UUUUUUUUU ~@@%^&* ~ 232323= 2345       ")
     output.length.should eql(5)
     output[0].text.should eql("%%%%%%%")
-    output[0].correct.should eql(:false)
-    output[1].correct.should eql(:false)
+    output[0].correct.should eql(false)
+    output[1].correct.should eql(false)
     output[1].text.should eql("UUUUUUUUU")
-    output[2].correct.should eql(:false)
+    output[2].correct.should eql(false)
     output[2].text.should eql("@@%^&*")
-    output[3].correct.should eql(:false)
+    output[3].correct.should eql(false)
     output[3].text.should eql("232323")
-    output[4].correct.should eql(:true)
+    output[4].correct.should eql(true)
     output[4].text.should eql("2345")
   end
   
@@ -44,9 +44,9 @@ describe Gipper::Answers do
     output = Gipper::Answers.parse("  ~ %%%%%%%#foo = UUUUUUUUU #bar")
     output.length.should eql(2)
     output[0].text.should eql("%%%%%%%")
-    output[0].correct.should eql(:false)
+    output[0].correct.should eql(false)
     output[0].comment.should eql("foo")
-    output[1].correct.should eql(:true)
+    output[1].correct.should eql(true)
     output[1].text.should eql("UUUUUUUUU")
     output[1].comment.should eql("bar")
   end
@@ -55,9 +55,9 @@ describe Gipper::Answers do
     output = Gipper::Answers.parse("  ~ Oompa\r\n#kun\r\n = Loompa\r\n #pyakun")
     output.length.should eql(2)
     output[0].text.should eql("Oompa")
-    output[0].correct.should eql(:false)
+    output[0].correct.should eql(false)
     output[0].comment.should eql("kun")
-    output[1].correct.should eql(:true)
+    output[1].correct.should eql(true)
     output[1].text.should eql("Loompa")
     output[1].comment.should eql("pyakun")
   end
@@ -70,10 +70,10 @@ describe Gipper::Answers do
     output = Gipper::Answers.parse('~ \{\}\~\=\#foo =\{\}\~\=\#bar')
     output.length.should eql(2)
     output[0].text.should eql("{}~=#foo")
-    output[0].correct.should eql(:false)
+    output[0].correct.should eql(false)
     output[0].comment.should eql(nil)
     output[1].text.should eql("{}~=#bar")
-    output[1].correct.should eql(:true)
+    output[1].correct.should eql(true)
     output[1].comment.should eql(nil)
   end
   
@@ -83,11 +83,11 @@ describe Gipper::Answers do
     quiz[0].text_post.should eql('?"')
     
     answers = quiz[0].answer
-    answers[0].correct.should eql(:false)
+    answers[0].correct.should eql(false)
     answers[0].text.should eql("honey")
-    answers[1].correct.should eql(:false)
+    answers[1].correct.should eql(false)
     answers[1].text.should eql("bunnies")
-    answers[2].correct.should eql(:true)
+    answers[2].correct.should eql(true)
     answers[2].text.should eql("money")
   end
   

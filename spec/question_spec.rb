@@ -44,7 +44,7 @@ describe Gipper::Question do
     end
     
     it "should return the answer" do
-      @question.answer[0].correct.should eql(:false)
+      @question.answer[0].correct.should eql(false)
     end
     
     it "should return the style" do
@@ -61,7 +61,7 @@ describe Gipper::Question do
       question = Gipper::Question.parse(' foo \{escaped bracketed text\}{T}')
       question.text.should eql("foo {escaped bracketed text}")
       question.style.should eql(:true_false)
-      question.answer[0].correct.should eql(:true)
+      question.answer[0].correct.should eql(true)
     end
     
     
@@ -69,7 +69,7 @@ describe Gipper::Question do
       question = Gipper::Question.parse(' my crazy \#\~\= question \{escaped bracketed text\}{=\=\#\~foo#hi-yah}')
       question.text.should eql("my crazy #~= question {escaped bracketed text}")
       question.style.should eql(:short_answer)
-      question.answer[0].correct.should eql(:true)
+      question.answer[0].correct.should eql(true)
       question.answer[0].text.should eql('=#~foo')
       question.answer[0].comment.should eql('hi-yah')
     end
@@ -117,11 +117,11 @@ describe Gipper::Question do
     end
     
     it "should return missing word when question_post is present" do
-      question = Gipper::Question.parse "foo {=bar} cheese."
+      question = Gipper::Question.parse "foo {=bar ~baz} cheese."
       question.text.should eql("foo")
       question.text_post.should eql("cheese.")
       question.style.should eql(:missing_word)
-      question.answer[0].correct.should eql(:true)
+      question.answer[0].correct.should eql(true)
       question.answer[0].text.should eql("bar")
     end
   end

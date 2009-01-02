@@ -35,22 +35,22 @@ module Gipper
       if @answer.length == 1 && @answer[0].text.nil?
         return :true_false
       end
-      
+            
       if @text_post
         return :missing_word
       end
-      
+        
       if @answer[0].correct.class == String
         return :matching
       end
       
       true_count = 0
       @answer.each do |hash|
-        if (hash.correct == :true)
+        if (hash.correct == true)
           true_count = true_count + 1
         end
       end
-      
+          
       if true_count == 1 && @answer.length > 1
         return :multiple_choice
       else

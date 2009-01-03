@@ -64,8 +64,8 @@ module Gipper
         correct[0] = eval_correctness(clause[0])
         correct[1] = clause[1..clause.length].strip
       else
-        correct[0] = clause
-        correct[1] = nil
+        correct[0] = true
+        correct[1] = clause
       end
       
       return correct

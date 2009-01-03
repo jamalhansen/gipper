@@ -101,6 +101,11 @@ describe Gipper::Question do
       question.style.should eql(:short_answer)
     end
     
+    it "should return a style of short answer when it has one true answer and text without equals" do
+      question = Gipper::Question.parse("Foo{5}")
+      question.style.should eql(:short_answer)
+    end
+    
     it "should return a style of matching when correct contains a string ->" do
       question = Gipper::Question.parse("Foo{=foo -> bar}")
       question.style.should eql(:matching)

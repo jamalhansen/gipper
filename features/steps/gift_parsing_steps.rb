@@ -87,15 +87,51 @@ Then /^contains the correct questions$/ do
   @questions[4].answer[1].text.should eql("nobody")
   
   #Two plus two equals {=four =4}
-  #
+  @questions[5].style.should eql(:short_answer)
+  @questions[5].text.should eql("Two plus two equals")
+  @questions[5].text_post.should eql(nil)
+  @questions[5].title.should eql(nil)
+  @questions[5].answer.length.should eql(2)
+  @questions[5].answer[0].correct.should eql(true)
+  @questions[5].answer[0].text.should eql("four")
+  @questions[5].answer[1].correct.should eql(true)
+  @questions[5].answer[1].text.should eql("4")
+  
   #Four plus one equals {5}
-  #
+  @questions[6].style.should eql(:short_answer)
+  @questions[6].text.should eql("Four plus one equals")
+  @questions[6].text_post.should eql(nil)
+  @questions[6].title.should eql(nil)
+  @questions[6].answer.length.should eql(1)
+  @questions[6].answer[0].correct.should eql(true)
+  @questions[6].answer[0].text.should eql("5")
+  
+  
   #Three plus {2} equals five.
-  #
+  @questions[7].style.should eql(:missing_word)
+  @questions[7].text.should eql("Three plus")
+  @questions[7].text_post.should eql("equals five.")
+  @questions[7].title.should eql(nil)
+  @questions[7].answer.length.should eql(1)
+  @questions[7].answer[0].correct.should eql(true)
+  @questions[7].answer[0].text.should eql("2")
+  
   #Grant is buried in Grant's tomb.{F}
-  #
+  @questions[8].style.should eql(:true_false)
+  @questions[8].text.should eql("Grant is buried in Grant's tomb.")
+  @questions[8].text_post.should eql(nil)
+  @questions[8].title.should eql(nil)
+  @questions[8].answer.length.should eql(1)
+  @questions[8].answer[0].correct.should eql(false)
+  
   #    The sun rises in the east.{T}
-  #   
+  @questions[9].style.should eql(:true_false)
+  @questions[9].text.should eql("The sun rises in the east.")
+  @questions[9].text_post.should eql(nil)
+  @questions[9].title.should eql(nil)
+  @questions[9].answer.length.should eql(1)
+  @questions[9].answer[0].correct.should eql(true)
+  
   #// ------------------------------------------
   #// Matching
   #// There must be at least three matching pairs.
@@ -107,7 +143,18 @@ Then /^contains the correct questions$/ do
   #         =subquestion2 -> subanswer2
   #         =subquestion3 -> subanswer3
   #         }
-  #     
+  @questions[10].style.should eql(:matching)
+  @questions[10].text.should eql("Matching Question.")
+  @questions[10].text_post.should eql(nil)
+  @questions[10].title.should eql(nil)
+  @questions[10].answer.length.should eql(3)
+  @questions[10].answer[0].text.should eql("subquestion1")
+  @questions[10].answer[0].correct.should eql("subanswer1")
+  @questions[10].answer[1].text.should eql("subquestion2")
+  @questions[10].answer[1].correct.should eql("subanswer2")
+  @questions[10].answer[2].text.should eql("subquestion3")
+  @questions[10].answer[2].correct.should eql("subanswer3")
+  
   #     Match the following countries with their corresponding capitals. {
   #         =Canada -> Ottawa
   #         =Italy  -> Rome
@@ -229,5 +276,6 @@ Then /^contains the correct questions$/ do
   #                   it is used to escape the control characters.
   #     }
   throw "need to implement more"
+  throw "need to implement categories"
 end
 

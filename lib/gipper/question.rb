@@ -32,7 +32,7 @@ module Gipper
     def find_style
       return @style_hint if @style_hint
             
-      if @answer.length == 1 && @answer[0].text.nil?
+      if @answer.length == 1 && @answer[0].text.nil? && boolean?(@answer[0].correct.class)
         return :true_false
       end
             
@@ -40,7 +40,7 @@ module Gipper
         return :missing_word
       end
         
-      if @answer[0].correct.class == String
+      if @answer[0].text && @answer[0].correct.class == String 
         return :matching
       end
       
@@ -57,6 +57,10 @@ module Gipper
         return :short_answer
       end
       
+    end
+    
+    def boolean? klass
+      klass == TrueClass || klass == FalseClass
     end
     
     def strip_escapes text

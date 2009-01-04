@@ -161,21 +161,74 @@ Then /^contains the correct questions$/ do
   #         =Japan  -> Tokyo
   #         =India  -> New Delhi
   #         }
-  #
+  question = @questions[11]
+  question.style.should eql(:matching)
+  question.text.should eql("Match the following countries with their corresponding capitals.")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(4)
+  question.answer[0].text.should eql("Canada")
+  question.answer[0].correct.should eql("Ottawa")
+  question.answer[1].text.should eql("Italy")
+  question.answer[1].correct.should eql("Rome")
+  question.answer[2].text.should eql("Japan")
+  question.answer[2].correct.should eql("Tokyo")
+  question.answer[3].text.should eql("India")
+  question.answer[3].correct.should eql("New Delhi")
+  
   #// ------------------------------------------
   #// Numerical
   #// ------------------------------------------
   #
   #     When was Ulysses S. Grant born? {#1822}
-  #
+  question = @questions[12]
+  question.style.should eql(:numerical)
+  question.text.should eql("When was Ulysses S. Grant born?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(1822)
+  question.answer[0].range.should eql(0)
+  question.answer[0].weight.should eql(100)
+  
   #     What is the value of pi (to 3 decimal places)? {#3.1415:0.0005}
-  #
+  question = @questions[13]
+  question.style.should eql(:numerical)
+  question.text.should eql("What is the value of pi (to 3 decimal places)?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(3.1415)
+  question.answer[0].range.should eql(0.0005)
+  question.answer[0].weight.should eql(100)
+  
   #     What is the value of pi (to 3 decimal places)? {#3.141..3.142}
-  #
+  question = @questions[14]
+  question.style.should eql(:numerical)
+  question.text.should eql("What is the value of pi (to 3 decimal places)?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(2)
+  question.answer[0].correct.should eql(3.1415)
+  question.answer[0].range.should eql(0.0005)
+  question.answer[0].weight.should eql(100)
+  
   #     When was Ulysses S. Grant born? {#
   #         =1822:0
   #         =%50%1822:2}
-  #
+  question = @questions[15]
+  question.style.should eql(:numerical)
+  question.text.should eql("When was Ulysses S. Grant born?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(2)
+  question.answer[0].correct.should eql(1822)
+  question.answer[0].range.should eql(0)
+  question.answer[0].weight.should eql(100)
+  question.answer[1].correct.should eql(1822)
+  question.answer[1].range.should eql(2)
+  question.answer[1].weight.should eql(50)
+  
   #
   #//Line Comments:
   #

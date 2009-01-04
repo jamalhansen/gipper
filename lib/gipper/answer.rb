@@ -28,14 +28,24 @@ module Gipper
 
         matches = correct.match(/%(\d+)%(\d+)/)
         if matches
-          weight = matches.captures[0].to_i
-          correct = matches.captures[1].to_i
+          weight = matches.captures[0]
+          correct = matches.captures[1]
         end
 
-        @weight = weight
         @comment = comment
-        @correct = correct.to_i
-        @range = range.to_i
+        @weight = weight.to_i
+        
+        if correct.include?(".")
+          @correct = correct.to_f 
+        else
+          @correct = correct.to_i
+        end
+        
+        if range && range.include?(".")
+          @range = range.to_f
+        else
+          @range = range.to_i
+        end
       else
         correct, text = split_correct answer
 

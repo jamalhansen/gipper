@@ -208,8 +208,8 @@ Then /^contains the correct questions$/ do
   question.text.should eql("What is the value of pi (to 3 decimal places)?")
   question.text_post.should eql(nil)
   question.title.should eql(nil)
-  question.answer.length.should eql(2)
-  question.answer[0].correct.should eql(3.1415)
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(3.141)
   question.answer[0].range.should eql(0.0005)
   question.answer[0].weight.should eql(100)
   

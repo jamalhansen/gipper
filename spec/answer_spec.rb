@@ -8,6 +8,13 @@ describe Gipper::Answer do
     output.text.should eql("5")
   end
   
+  it "should handle decimals for numerical answers" do
+    output = Gipper::Answer.parse("5.6765", :numerical )
+    output.correct.should eql(5.6765)
+    output.weight.should eql(100)
+    output.range.should eql(0)
+  end
+  
   describe "parsing true false questions" do
     it "should be tolerant of input variance" do
       output = Gipper::Answer.parse(" T" )

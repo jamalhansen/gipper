@@ -209,8 +209,8 @@ Then /^contains the correct questions$/ do
   question.text_post.should eql(nil)
   question.title.should eql(nil)
   question.answer.length.should eql(1)
-  question.answer[0].correct.should eql(3.141)
-  question.answer[0].range.should eql(0.0005)
+  (question.answer[0].correct * 100000).round.should eql(314150)
+  (question.answer[0].range * 100000).round.should eql(50)
   question.answer[0].weight.should eql(100)
   
   #     When was Ulysses S. Grant born? {#
@@ -234,44 +234,169 @@ Then /^contains the correct questions$/ do
   #
   #// Subheading: Numerical questions below
   #What's 2 plus 2? {#4}
-  #     
+  question = @questions[16]
+  question.style.should eql(:numerical)
+  question.text.should eql("What's 2 plus 2?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(4)
+  question.answer[0].range.should eql(0)
+  question.answer[0].weight.should eql(100)
+  
   #//Question Name:
   #::Kanji Origins::Japanese characters originally
   #came from what country? {=China}
-  #
+  question = @questions[17]
+  question.style.should eql(:short_answer)
+  question.text.should eql("Japanese characters originally\ncame from what country?")
+  question.text_post.should eql(nil)
+  question.title.should eql("Kanji Origins")
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(true)
+  question.answer[0].text.should eql("China")
+  
   # ::Thanksgiving Date::The American holiday of Thanksgiving is 
   # celebrated on the {~second ~third =fourth} Thursday of November.
-  #
+  question = @questions[18]
+  question.style.should eql(:missing_word)
+  question.text.should eql("The American holiday of Thanksgiving is \n celebrated on the")
+  question.text_post.should eql("Thursday of November.")
+  question.title.should eql("Thanksgiving Date")
+  question.answer.length.should eql(3)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("second")
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("third")
+  question.answer[2].correct.should eql(true)
+  question.answer[2].text.should eql("fourth")
+  
   #//Feedback:
   #
   #     What's the answer to this multiple-choice question?{
   #     ~wrong answer#feedback comment on the wrong answer
   #     ~another wrong answer#feedback comment on this wrong answer
   #     =right answer#Very good!}
+  question = @questions[19]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("What's the answer to this multiple-choice question?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(3)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("wrong answer")
+  question.answer[0].comment.should eql("feedback comment on the wrong answer")
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("another wrong answer")
+  question.answer[1].comment.should eql("feedback comment on this wrong answer")
+  question.answer[2].correct.should eql(true)
+  question.answer[2].text.should eql("right answer")
+  question.answer[2].comment.should eql("Very good!")
   #     
   #     Who's buried in Grant's tomb?{
   #     =no one#excellent answer!
   #     =nobody#excellent answer!}
-  #     
+  question = @questions[20]
+  question.style.should eql(:short_answer)
+  question.text.should eql("Who's buried in Grant's tomb?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(2)
+  question.answer[0].correct.should eql(true)
+  question.answer[0].text.should eql("no one")
+  question.answer[0].comment.should eql("excellent answer!")
+  question.answer[1].correct.should eql(true)
+  question.answer[1].text.should eql("nobody")
+  question.answer[1].comment.should eql("excellent answer!")
+  
   #     Grant is buried in Grant's tomb.{FALSE#No one is buried in Grant's tomb.}
-  #
+  question = @questions[21]
+  question.style.should eql(:true_false)
+  question.text.should eql("Grant is buried in Grant's tomb.")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(1)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql(nil)
+  question.answer[0].comment.should eql("No one is buried in Grant's tomb.")
+  
   #//Percentage Answer Weights:
   #//Percentage answer weights are available for both Multiple Choice and Short Answer questions. Percentage answer weights can be included by following the tilde (for Multiple Choice) or equal sign (for Short Answer) with the desired percent enclosed within percent signs (e.g., %50%). 
   #//This option can be combined with feedback comments.
   #
   #     Difficult question.{~wrong answer ~%50%half credit answer =full credit answer}
-  #          
+  question = @questions[22]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("Difficult question.")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(3)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("wrong answer")
+  question.answer[0].weight.should eql(nil)
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("half credit answer")
+  question.answer[1].weight.should eql(50)
+  question.answer[2].correct.should eql(true)
+  question.answer[2].text.should eql("full credit answer")
+  question.answer[2].weight.should eql(100)
+  
   #     ::Jesus' hometown::Jesus Christ was from {
   #     ~Jerusalem#This was an important city, but the wrong answer.
   #     ~%25%Bethlehem#He was born here, but not raised here.
   #     ~%50%Galilee#You need to be more specific.
   #     =Nazareth#Yes! That's right!}.
-  #     
+  question = @questions[23]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("Jesus Christ was from")
+  question.text_post.should eql(nil)
+  question.title.should eql("Jesus' hometown")
+  question.answer.length.should eql(4)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("Jerusalem")
+  question.answer[0].weight.should eql(nil)
+  question.answer[0].comment.should eql("This was an important city, but the wrong answer.")
+  
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("Bethlehem")
+  question.answer[1].weight.should eql(25)
+  question.answer[1].comment.should eql("He was born here, but not raised here.")
+  
+  question.answer[2].correct.should eql(false)
+  question.answer[2].text.should eql("Galilee")
+  question.answer[2].weight.should eql(50)
+  question.answer[2].comment.should eql("You need to be more specific.")
+  
+  question.answer[3].correct.should eql(true)
+  question.answer[3].text.should eql("Nazareth")
+  question.answer[3].weight.should eql(100)
+  question.answer[3].comment.should eql("Yes! That's right!")
+  
   #     ::Jesus' hometown:: Jesus Christ was from {
   #     =Nazareth#Yes! That's right!
   #     =%75%Nazereth#Right, but misspelled.
   #     =%25%Bethlehem#He was born here, but not raised here.}
-  #
+  question = @questions[24]
+  question.style.should eql(:short_answer)
+  question.text.should eql("Jesus Christ was from")
+  question.text_post.should eql(nil)
+  question.title.should eql("Jesus' hometown")
+  question.answer.length.should eql(4)
+  question.answer[0].correct.should eql(true)
+  question.answer[0].text.should eql("Nazareth")
+  question.answer[0].weight.should eql(nil)
+  question.answer[0].comment.should eql("Yes! That's right!")
+  
+  question.answer[1].correct.should eql(true)
+  question.answer[1].text.should eql("Nazereth")
+  question.answer[1].weight.should eql(75)
+  question.answer[1].comment.should eql("Right, but misspelled.")
+  
+  question.answer[2].correct.should eql(true)
+  question.answer[2].text.should eql("Bethlehem")
+  question.answer[2].weight.should eql(25)
+  question.answer[2].comment.should eql("He was born here, but not raised here.")
+  
   #//Specify text-formatting for the question
   #//The question text (only) may have an optional text format specified. 
   #//Currently the available formats are moodle (Moodle Auto-Format), html (HTML format), plain (Plain text format) and markdown (Markdown format). 
@@ -282,7 +407,20 @@ Then /^contains the correct questions$/ do
   #         ~third
   #         =fourth
   #     } Thursday of November.    
-  #     
+  question = @questions[25]
+  question.format = "markdown"
+  question.style.should eql(:missing_word)
+  question.text.should eql("The *American holiday of Thanksgiving* is celebrated on the")
+  question.text_post.should eql("Thursday of November.")
+  question.title.should eql(nil)
+  question.answer.length.should eql(3)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("second")
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("third")
+  question.answer[2].correct.should eql(true)
+  question.answer[2].text.should eql("fourth")
+  
   #//Multiple Answers:
   #//The Multiple Answers option is used for multiple choice questions when 
   #//two or more answers must be selected in order to obtain full credit. 

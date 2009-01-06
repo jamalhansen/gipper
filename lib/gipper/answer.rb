@@ -35,16 +35,14 @@ module Gipper
         @comment = comment
         @weight = weight.to_i
         
-        if correct.include?(".")
-          @correct = correct.to_f 
+        parts = correct.split(/\.\./)
+        if parts.length == 2
+          parts.map! { |s| to_num(s) }
+          @correct = ((parts[0] + parts[1]) /2)
+          @range = ((parts[1] - parts[0]) /2)
         else
-          @correct = correct.to_i
-        end
-        
-        if range && range.include?(".")
-          @range = range.to_f
-        else
-          @range = range.to_i
+          @correct = to_num(correct)
+          @range = to_num(range)
         end
       else
         correct, text = split_correct answer
@@ -56,6 +54,14 @@ module Gipper
         @text, @comment = split_comment(text)  
         
         @correct = correct
+      end
+    end
+    
+    def to_num(val)
+      if val && val.include?(".")
+        val.to_f
+      else
+        val.to_i
       end
     end
     

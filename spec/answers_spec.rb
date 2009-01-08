@@ -96,7 +96,7 @@ describe Gipper::Answers do
     answers.length.should eql(1)
     answers[0].correct.should eql(2000)
     answers[0].range.should eql(3)
-    answers[0].weight.should eql(100)
+    answers[0].weight.should eql(nil)
     answers[0].comment.should eql(nil)
   end
   
@@ -105,7 +105,7 @@ describe Gipper::Answers do
     answers.length.should eql(2)
     answers[0].correct.should eql(2000)
     answers[0].range.should eql(0)
-    answers[0].weight.should eql(100)
+    answers[0].weight.should eql(nil)
     answers[0].comment.should eql("Whoopdee do!")
     answers[1].correct.should eql(2000)
     answers[1].range.should eql(3)

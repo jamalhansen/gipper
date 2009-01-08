@@ -21,15 +21,10 @@ module Gipper
         correct.gsub!("=", "")
         weight = 100
 
-        matches = correct.match(/%(\d+)%(\d+)/)
-        if matches
-          weight = matches.captures[0]
-          correct = matches.captures[1]
-        end
-
-        @comment = comment
-        @weight = weight.to_i
+        correct, weight = split_weight(correct)
+        @weight = weight.to_i if weight
         
+        @comment = comment
         parts = correct.split(/\.\./)
         if parts.length == 2
           parts.map! { |s| to_num(s) }
@@ -46,6 +41,8 @@ module Gipper
           text, correct = t, c       
         end
 
+        text, weight = split_weight(text)
+        @weight = weight.to_i if weight
         @text, @comment = split_comment(text)  
         @correct = correct
         
@@ -94,6 +91,18 @@ module Gipper
       if matches
         yield matches.captures.map {|s| s.strip}
       end
+    end
+    
+    def split_weight answer
+      return [answer, nil] unless answer.class == String
+      matches = answer.match(/%(\d+)%(.+)/)
+      if matches
+        weight = matches.captures[0]
+        correct = matches.captures[1]
+        return [correct, weight]
+      end
+        
+      return [answer, nil]  
     end
 
     def eval_correctness indicator

@@ -14,7 +14,7 @@ Then /^contains the correct numerical questions$/ do
   @questions[0].answer.length.should eql(1)
   @questions[0].answer[0].correct.should eql(1945)
   @questions[0].answer[0].range.should eql(5)
-  @questions[0].answer[0].weight.should eql(100)
+  @questions[0].answer[0].weight.should eql(nil)
   
   #//this comment will be ignored in the import process 
   #::Numerical example::
@@ -29,7 +29,7 @@ Then /^contains the correct numerical questions$/ do
   @questions[1].answer.length.should eql(2)
   @questions[1].answer[0].correct.should eql(1993)
   @questions[1].answer[0].range.should eql(0)
-  @questions[1].answer[0].weight.should eql(100)
+  @questions[1].answer[0].weight.should eql(nil)
   @questions[1].answer[0].comment.should eql("Correct!  you will get full credit for this answer")
   @questions[1].answer[1].correct.should eql(1993)
   @questions[1].answer[1].range.should eql(2)

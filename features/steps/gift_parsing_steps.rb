@@ -189,7 +189,7 @@ Then /^contains the correct questions$/ do
   question.answer.length.should eql(1)
   question.answer[0].correct.should eql(1822)
   question.answer[0].range.should eql(0)
-  question.answer[0].weight.should eql(100)
+  question.answer[0].weight.should eql(nil)
   
   #     What is the value of pi (to 3 decimal places)? {#3.1415:0.0005}
   question = @questions[13]
@@ -200,7 +200,7 @@ Then /^contains the correct questions$/ do
   question.answer.length.should eql(1)
   question.answer[0].correct.should eql(3.1415)
   question.answer[0].range.should eql(0.0005)
-  question.answer[0].weight.should eql(100)
+  question.answer[0].weight.should eql(nil)
   
   #     What is the value of pi (to 3 decimal places)? {#3.141..3.142}
   question = @questions[14]
@@ -211,7 +211,7 @@ Then /^contains the correct questions$/ do
   question.answer.length.should eql(1)
   (question.answer[0].correct * 100000).round.should eql(314150)
   (question.answer[0].range * 100000).round.should eql(50)
-  question.answer[0].weight.should eql(100)
+  question.answer[0].weight.should eql(nil)
   
   #     When was Ulysses S. Grant born? {#
   #         =1822:0
@@ -224,7 +224,7 @@ Then /^contains the correct questions$/ do
   question.answer.length.should eql(2)
   question.answer[0].correct.should eql(1822)
   question.answer[0].range.should eql(0)
-  question.answer[0].weight.should eql(100)
+  question.answer[0].weight.should eql(nil)
   question.answer[1].correct.should eql(1822)
   question.answer[1].range.should eql(2)
   question.answer[1].weight.should eql(50)
@@ -242,7 +242,7 @@ Then /^contains the correct questions$/ do
   question.answer.length.should eql(1)
   question.answer[0].correct.should eql(4)
   question.answer[0].range.should eql(0)
-  question.answer[0].weight.should eql(100)
+  question.answer[0].weight.should eql(nil)
   
   #//Question Name:
   #::Kanji Origins::Japanese characters originally
@@ -339,7 +339,7 @@ Then /^contains the correct questions$/ do
   question.answer[1].weight.should eql(50)
   question.answer[2].correct.should eql(true)
   question.answer[2].text.should eql("full credit answer")
-  question.answer[2].weight.should eql(100)
+  question.answer[2].weight.should eql(nil)
   
   #     ::Jesus' hometown::Jesus Christ was from {
   #     ~Jerusalem#This was an important city, but the wrong answer.
@@ -347,9 +347,9 @@ Then /^contains the correct questions$/ do
   #     ~%50%Galilee#You need to be more specific.
   #     =Nazareth#Yes! That's right!}.
   question = @questions[23]
-  question.style.should eql(:multiple_choice)
+  question.style.should eql(:missing_word)
   question.text.should eql("Jesus Christ was from")
-  question.text_post.should eql(nil)
+  question.text_post.should eql(".")
   question.title.should eql("Jesus' hometown")
   question.answer.length.should eql(4)
   question.answer[0].correct.should eql(false)
@@ -369,7 +369,7 @@ Then /^contains the correct questions$/ do
   
   question.answer[3].correct.should eql(true)
   question.answer[3].text.should eql("Nazareth")
-  question.answer[3].weight.should eql(100)
+  question.answer[3].weight.should eql(nil)
   question.answer[3].comment.should eql("Yes! That's right!")
   
   #     ::Jesus' hometown:: Jesus Christ was from {
@@ -381,7 +381,7 @@ Then /^contains the correct questions$/ do
   question.text.should eql("Jesus Christ was from")
   question.text_post.should eql(nil)
   question.title.should eql("Jesus' hometown")
-  question.answer.length.should eql(4)
+  question.answer.length.should eql(3)
   question.answer[0].correct.should eql(true)
   question.answer[0].text.should eql("Nazareth")
   question.answer[0].weight.should eql(nil)

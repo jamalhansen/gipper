@@ -3,23 +3,18 @@ module Gipper
     attr_reader :weight, :correct, :comment, :range, :text
     
     def self.parse text, style_hint = nil
-      style_hint = :true_false if !style_hint && can_parse_as_true_false?(text)
-      
       answer = Answer.new
       answer.read text, style_hint
       answer
     end
         
-    def self.can_parse_as_true_false? answer
+    def can_parse_as_true_false? answer
       return false if answer.nil?
-
-      !(answer.downcase.strip =~ /^(t|f|true|false)$/).nil?
+      answer.downcase.strip =~ /^(t|f|true|false)$/
     end
 
     def read answer, style_hint
       case style_hint
-      when :true_false
-        @correct = is_a_true answer
       when :numerical
         correct, range = answer.split(":", 2)
         range, comment = split_comment range
@@ -52,9 +47,18 @@ module Gipper
         end
 
         @text, @comment = split_comment(text)  
-        
         @correct = correct
+        
+        # handle true false
+        if can_parse_as_true_false?(@text)
+          convert_to_true_false!
+        end
       end
+    end
+    
+    def convert_to_true_false!
+      @correct = is_true(@text)
+      @text = nil
     end
     
     def to_num(val)
@@ -65,12 +69,8 @@ module Gipper
       end
     end
     
-    def is_a_true answer
-      if !(answer.downcase.strip =~ /^(t|true)$/).nil?
-        return true
-      end
-      
-      return false
+    def is_true answer
+      !(answer.downcase.strip =~ /^(t|true)$/).nil?
     end
     
     def split_correct clause

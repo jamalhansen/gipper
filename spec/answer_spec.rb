@@ -28,6 +28,13 @@ describe Gipper::Answer do
   end
   
   describe "parsing true false questions" do
+    it "should recognize comments" do
+      output = Gipper::Answer.parse(" T#foo" )
+      output.correct.should eql(true)
+      output.text.should eql(nil)
+      output.comment.should eql("foo")
+    end
+    
     it "should be tolerant of input variance" do
       output = Gipper::Answer.parse(" T" )
       output.correct.should eql(true)

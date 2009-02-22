@@ -131,7 +131,8 @@ came from what country? {=China}
           ~No one
           ~%50%Grant
           ~%50%Grant's wife
-          ~Grant's father }Note that there is no equal sign (=) in any answer and the answers should total no more than 100%, otherwise Moodle will return an error. To avoid the problem of students automatically getting 100% by simply checking all of the answers, it is best to include negative answer weights for wrong answers.
+          ~Grant's father }
+//Note that there is no equal sign (=) in any answer and the answers should total no more than 100%, otherwise Moodle will return an error. To avoid the problem of students automatically getting 100% by simply checking all of the answers, it is best to include negative answer weights for wrong answers.
 
      What two people are entombed in Grant's tomb? {
           ~%-50%No one

@@ -7,7 +7,8 @@ module Gipper
       question
     end
    
-    attr_reader :text_post, :answer, :title, :text, :style
+    
+    attr_accessor :text_post, :answer, :title, :text, :style, :format
     
     # instance method to parse the question
     def read text
@@ -25,6 +26,7 @@ module Gipper
       
       @answer = Gipper::Answers.parse(answer, @style_hint)
       @title, question = strip_title(matches[2])
+      @format, question = strip_format(question)
       @text = strip_escapes(question)
       @style = find_style
     end
@@ -51,7 +53,7 @@ module Gipper
         end
       end
           
-      if true_count == 1 && @answer.length > 1
+      if true_count <= 1 && @answer.length > 1
         return :multiple_choice
       else
         return :short_answer
@@ -69,6 +71,18 @@ module Gipper
      
     def strip_title question
       reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)      
+      parts = reg.match(question.strip)            
+      
+      if parts        
+        title = parts.captures[0].strip        
+        question = parts.captures[1]      
+      end            
+     
+      return [title, question.strip]
+    end
+
+    def strip_format question
+      reg = Regexp.new('^\[(.*)\](.*)$', Regexp::MULTILINE)      
       parts = reg.match(question.strip)            
       
       if parts        

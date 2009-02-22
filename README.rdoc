@@ -8,15 +8,16 @@ A ruby parser for the GIFT quiz file format
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Parses GIFT files into a usable format. 
+* Missing features - Categories, Description type questions, setting case sensitivity on short answer questions.
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* N/A
 
 == INSTALL:
 

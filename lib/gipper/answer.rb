@@ -95,7 +95,7 @@ module Gipper
     
     def split_weight answer
       return [answer, nil] unless answer.class == String
-      matches = answer.match(/%(\d+)%(.+)/)
+      matches = answer.match(/%(-?\d+)%(.+)/)
       if matches
         weight = matches.captures[0]
         correct = matches.captures[1]
@@ -122,7 +122,7 @@ module Gipper
         text = matches[0].strip
       end
     
-      return [strip_escapes(text), comment]
+      return [strip_escapes(text), strip_escapes(comment)]
     end
     
     def strip_escapes text

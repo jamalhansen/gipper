@@ -431,14 +431,52 @@ Then /^contains the correct questions$/ do
   #          ~No one
   #          ~%50%Grant
   #          ~%50%Grant's wife
-  #          ~Grant's father }Note that there is no equal sign (=) in any answer and the answers should total no more than 100%, otherwise Moodle will return an error. To avoid the problem of students automatically getting 100% by simply checking all of the answers, it is best to include negative answer weights for wrong answers.
-  #
+  #          ~Grant's father }
+  #//Note that there is no equal sign (=) in any answer and the answers should total no more than 100%, otherwise Moodle will return an error. To avoid the problem of students automatically getting 100% by simply checking all of the answers, it is best to include negative answer weights for wrong answers.
+  question = @questions[26]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("What two people are entombed in Grant's tomb?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(4)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("No one")
+  question.answer[0].weight.should eql(nil)
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("Grant")
+  question.answer[1].weight.should eql(50)
+  question.answer[2].correct.should eql(false)
+  question.answer[2].text.should eql("Grant's wife")
+  question.answer[2].weight.should eql(50)
+  question.answer[3].correct.should eql(false)
+  question.answer[3].text.should eql("Grant's father")
+  question.answer[3].weight.should eql(nil)
+
+
   #     What two people are entombed in Grant's tomb? {
   #          ~%-50%No one
   #          ~%50%Grant
   #          ~%50%Grant's wife
   #          ~%-50%Grant's father }
-  #          
+  
+  question = @questions[27]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("What two people are entombed in Grant's tomb?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(4)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("No one")
+  question.answer[0].weight.should eql(-50)
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("Grant")
+  question.answer[1].weight.should eql(50)
+  question.answer[2].correct.should eql(false)
+  question.answer[2].text.should eql("Grant's wife")
+  question.answer[2].weight.should eql(50)
+  question.answer[3].correct.should eql(false)
+  question.answer[3].text.should eql("Grant's father")
+  question.answer[3].weight.should eql(-50)         
   #//Special Characters ~ = # { } :
   #//These symbols ~ = # { } control the operation of this filter 
   #//and cannot be used as normal text within questions. 
@@ -455,6 +493,18 @@ Then /^contains the correct questions$/ do
   #          ~ \= 2 + 2
   #          = \= 2 + 3
   #          ~ \= 2 + 4  }
+  question = @questions[28]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("Which answer equals 5?")
+  question.text_post.should eql(nil)
+  question.title.should eql(nil)
+  question.answer.length.should eql(3)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("= 2 + 2")
+  question.answer[1].correct.should eql(true)
+  question.answer[1].text.should eql("= 2 + 3")
+  question.answer[2].correct.should eql(false)
+  question.answer[2].text.should eql("= 2 + 4")
   #
   #     ::GIFT Control Characters::
   #     Which of the following is NOT a control character for the GIFT import format? {
@@ -466,7 +516,32 @@ Then /^contains the correct questions$/ do
   #        = \     # Correct! \ (backslash) is not a control character. BUT,
   #                   it is used to escape the control characters.
   #     }
-  throw "need to implement more"
+  question = @questions[29]
+  question.style.should eql(:multiple_choice)
+  question.text.should eql("Which of the following is NOT a control character for the GIFT import format?")
+  question.text_post.should eql(nil)
+  question.title.should eql("GIFT Control Characters")
+  question.answer.length.should eql(6)
+  question.answer[0].correct.should eql(false)
+  question.answer[0].text.should eql("~")
+  question.answer[0].comment.should eql("~ is a control character.")
+  question.answer[1].correct.should eql(false)
+  question.answer[1].text.should eql("=")
+  question.answer[1].comment.should eql("= is a control character.")
+  question.answer[2].correct.should eql(false)
+  question.answer[2].text.should eql("#")
+  question.answer[2].comment.should eql("# is a control character.")
+  question.answer[3].correct.should eql(false)
+  question.answer[3].text.should eql("{")
+  question.answer[3].comment.should eql("{ is a control character.")
+  question.answer[4].correct.should eql(false)
+  question.answer[4].text.should eql("}")
+  question.answer[4].comment.should eql("} is a control character.")
+  question.answer[5].correct.should eql(true)
+  question.answer[5].text.should eql("\\")
+  question.answer[5].comment.should eql("Correct! \\ (backslash) is not a control character. BUT,
+                   it is used to escape the control characters.")
+
   throw "need to implement categories"
 end
 

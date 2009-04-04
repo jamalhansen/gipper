@@ -542,6 +542,5 @@ Then /^contains the correct questions$/ do
   question.answer[5].comment.should eql("Correct! \\ (backslash) is not a control character. BUT,
                    it is used to escape the control characters.")
 
-  throw "need to implement categories"
 end
 

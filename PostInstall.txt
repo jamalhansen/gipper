@@ -1,7 +1,5 @@
+------------------------------------------
+Thank you for using Gipper
 
 For more information on gipper, see http://gipper.rubyforge.org
-
-NOTE: Change this information in PostInstall.txt 
-You can also delete it if you don't want it.
-
-
+------------------------------------------

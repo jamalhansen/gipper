@@ -67,7 +67,7 @@ describe Gipper::Answers do
   # TeX expressions) you must "escape" them by preceding them with a \ 
   # directly in front of each { or } or =. 
   it "should ignore escaped characters" do
-    output = Gipper::Answers.parse('~ \{\}\~\=\#foo =\{\}\~\=\#bar')
+    output = Gipper::Answers.parse("~ \\{\\}\\~\\=\\#foo =\\{\\}\\~\\=\\#bar")
     output.length.should eql(2)
     output[0].text.should eql("{}~=#foo")
     output[0].correct.should eql(false)

@@ -110,23 +110,18 @@ module Gipper
     end
     
     def split_comment answer_text
-      return [nil, nil] if blank?(text)
-      
-      reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
-      matches = answer_text.reverse.split(reg).map {|ss| ss.reverse} 
+      return [nil, nil] if blank?(answer_text)
 
-      if matches.length > 1
-        comment = matches[0].strip
-        text = matches[1].strip
-      else
-        text = matches[0].strip
-      end
-    
-      return [strip_escapes(text), strip_escapes(comment)]
+      answer_text.strip!
+      reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
+      text, feedback_comment = answer_text.reverse.split(reg, 2).map {|ss| ss.reverse.strip}.reverse
+      text = strip_escapes(text)
+      feedback_comment = strip_escapes(feedback_comment) if feedback_comment
+      [text, feedback_comment]
     end
     
     def strip_escapes text
-      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
+      text.gsub(/\\\\(~|=|#|\{|\})/, '\1') if !text.nil?
     end
 
     def blank? text

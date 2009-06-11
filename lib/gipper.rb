@@ -1,6 +1,8 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+require 'answer'
+require 'answers'
+require 'question'
+require 'quiz'
 
 module Gipper
-  VERSION = '0.0.1'
+
 end

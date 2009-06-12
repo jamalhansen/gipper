@@ -11,6 +11,7 @@ begin
     gem.homepage = "http://github.com/rubyyot/gipper"
     gem.authors = ["Jamal Hansen"]
     gem.rubyforge_project = "gipper"
+    gem.add_dependency 'oniguruma'
     gem.add_development_dependency 'technicalpickles-shoulda'
 
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

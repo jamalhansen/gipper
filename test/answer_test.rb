@@ -39,9 +39,9 @@ class AnswerTest < Test::Unit::TestCase
     end
 
     should "return full text when feedback comment is escaped" do
-      text, comment = @answer.split_comment("foo \\#bar")
+      text, comment = @answer.split_comment('foo \\#bar')
       assert_nil comment
-      assert_equal "foo \\#bar", text
+      assert_equal 'foo \\#bar', text
     end
   end
 
@@ -56,12 +56,12 @@ class AnswerTest < Test::Unit::TestCase
     end
 
     should "remove comments to the end of the line" do
-      result = @answer.strip_escapes("foo \\\\#comment")
+      result = @answer.strip_escapes("foo \\#comment")
       assert_equal "foo #comment", result
     end
 
-    should "remove escapes from parsed string" do
-      @answer.read("~ \\{\\}\\~\\=\\#foo", nil)
+    should "remove escapes from read string" do
+      @answer.read('~ \\{\\}\\~\\=\\#foo', nil)
       assert_equal "{}~=#foo", @answer.text
     end
   end

@@ -1,5 +1,8 @@
+require 'oniguruma'
+
 module Gipper
   class Answer
+    include Oniguruma
     attr_reader :weight, :correct, :comment, :range, :text
     
     def self.parse text, style_hint = nil
@@ -43,7 +46,8 @@ module Gipper
 
         text, weight = split_weight(text)
         @weight = weight.to_i if weight
-        @text, @comment = split_comment(text)  
+        @text, @comment = split_comment(text).map { |item| strip_escapes item }
+
         @correct = correct
         
         # handle true false
@@ -113,15 +117,17 @@ module Gipper
       return [nil, nil] if blank?(answer_text)
 
       answer_text.strip!
-      reg = Regexp.new('#(?!\\\\)', Regexp::MULTILINE)
-      text, feedback_comment = answer_text.reverse.split(reg, 2).map {|ss| ss.reverse.strip}.reverse
-      text = strip_escapes(text)
-      feedback_comment = strip_escapes(feedback_comment) if feedback_comment
+      reg = ORegexp.new('(?<before>.*)(?<!\\\\)#(?<after>.*)')
+      match = reg.match(answer_text)
+      return [answer_text, nil] unless match
+
+      text = match[:before].strip
+      feedback_comment = match[:after].strip
       [text, feedback_comment]
     end
     
     def strip_escapes text
-      text.gsub(/\\\\(~|=|#|\{|\})/, '\1') if !text.nil?
+      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
     end
 
     def blank? text

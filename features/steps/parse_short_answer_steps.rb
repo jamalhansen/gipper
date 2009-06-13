@@ -1,6 +1,6 @@
 
 Given /^a GIFT file of short answer questions$/ do
-  file = File.open(File.join(File.dirname(__FILE__), *%w[.. .. spec files short_answer.gift]))
+  file = File.open(File.join(File.dirname(__FILE__), *%w[.. fixtures short_answer.gift]))
   @data = file.read
   @data.length.should be > 0
 end

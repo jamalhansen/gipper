@@ -1,5 +1,5 @@
 Given /^a GIFT file of missing word questions$/ do
-  file = File.open(File.join(File.dirname(__FILE__), *%w[.. .. spec files missing_word.gift]))
+  file = File.open(File.join(File.dirname(__FILE__), *%w[.. fixtures missing_word.gift]))
   @data = file.read
   @data.length.should be > 0
 end

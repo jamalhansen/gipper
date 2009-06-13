@@ -17,4 +17,12 @@ class Test::Unit::TestCase
   def assert_false value
     assert FalseClass, value.class
   end
+
+  def true_false_question title, question, answer
+    if title
+      "::#{title}::#{question}#{answer}"
+    else
+      "#{question}#{answer}"
+    end
+  end
 end

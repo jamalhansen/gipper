@@ -1,5 +1,5 @@
 Given /^a GIFT file of numerical questions$/ do
-  file = File.open(File.join(File.dirname(__FILE__), *%w[.. .. spec files numerical.gift]))
+  file = File.open(File.join(File.dirname(__FILE__), *%w[.. fixtures numerical.gift]))
   @data = file.read
   @data.length.should be > 0
 end

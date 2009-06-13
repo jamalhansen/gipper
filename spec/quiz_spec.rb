@@ -13,6 +13,21 @@ describe Gipper::Quiz do
       q.should eql("1=1{T}")
     end
   end
+
+
+  it "should return just a question mark for question_post when question_post is just a question mark" do
+    quiz = Gipper::Quiz.parse 'You say that, "money is the root of all evil", I ask you "what is the root of all {~honey ~bunnies =money}?"'
+    quiz[0].text.should eql('You say that, "money is the root of all evil", I ask you "what is the root of all')
+    quiz[0].text_post.should eql('?"')
+
+    answers = quiz[0].answer
+    answers[0].correct.should eql(false)
+    answers[0].text.should eql("honey")
+    answers[1].correct.should eql(false)
+    answers[1].text.should eql("bunnies")
+    answers[2].correct.should eql(true)
+    answers[2].text.should eql("money")
+  end
   
   describe "(when passed an empty string)" do
     it "should return an empty array" do

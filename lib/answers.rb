@@ -3,15 +3,18 @@ require 'answer'
 module Gipper
   class Answers
     include Oniguruma
+    attr_accessor :style_hint
+
     # Parses the answers
     def self.parse answer, style_hint=nil
       array = []
+      @style_hint=style_hint
 
       answers = self.new
       parts = answers.split_apart answer
 
       parts.each do |clause|
-        array << Answer.parse(clause, style_hint) 
+        array << Answer.parse(clause, @style_hint)
       end
       
       array

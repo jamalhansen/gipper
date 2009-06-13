@@ -134,4 +134,71 @@ class AnswerTest < Test::Unit::TestCase
       assert_equal false, Gipper::Answer.parse(" f ").correct
     end
   end
+
+  should "identify matching questions and place the match into correct" do
+    answer = Gipper::Answer.parse("=waffle -> cone")
+    assert_equal "waffle", answer.text
+    assert_equal "cone", answer.correct
+  end
+
+  should "be tolerant of input variance" do
+    answer = Gipper::Answer.parse("~ %%%%%%%")
+    assert_equal "%%%%%%%", answer.text
+    assert_equal false, answer.correct
+
+    answer = Gipper::Answer.parse("~UUUUUUUUU")
+    assert_equal "UUUUUUUUU", answer.text
+    assert_equal false, answer.correct
+  end
+
+  should "get answer conmments" do
+    answer = Gipper::Answer.parse("~ %%%%%%%#foo")
+    assert_equal "%%%%%%%", answer.text
+    assert_false answer.correct
+    assert_equal "foo", answer.comment
+  end
+
+  should "get answer conmments when preceeded by a new line" do
+    answer = Gipper::Answer.parse("~ Oompa\r\n#kun")
+    assert_equal "Oompa", answer.text
+    assert_false answer.correct
+    assert_equal "kun", answer.comment
+  end
+
+  # If you want to use curly braces, { or }, or equal sign, =,
+  # or # or ~ in a GIFT file (for example in a math question including
+  # TeX expressions) you must "escape" them by preceding them with a \
+  # directly in front of each { or } or =.
+  should "ignore all escaped characters" do
+    answer = Gipper::Answer.parse("~ \\{\\}\\~\\=\\#foo")
+    assert_equal "{}~=#foo", answer.text
+    assert_false answer.correct
+    assert_nil answer.comment
+  end
+
+  context "numerical answers" do
+    should "understand numerical answer format" do
+      answer = Gipper::Answer.parse("2000:3", :numerical)
+      assert_equal 2000, answer.correct
+      assert_equal 3, answer.range
+      assert_nil answer.weight
+      assert_nil answer.comment
+    end
+
+    should "simple numerical answer format" do
+      answer = Gipper::Answer.parse("=2000:0 #Whoopdee do!", :numerical)
+      assert_equal 2000, answer.correct
+      assert_equal 0, answer.range
+      assert_nil answer.weight
+      assert_equal "Whoopdee do!", answer.comment
+    end
+
+    should "percent based numerical answer format" do
+      answer = Gipper::Answer.parse("=%50%2000:3 #Yippers", :numerical)
+      assert_equal 2000, answer.correct
+      assert_equal 3, answer.range
+      assert_equal 50, answer.weight
+      assert_equal "Yippers", answer.comment
+    end
+  end
 end

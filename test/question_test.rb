@@ -19,7 +19,7 @@ class QuestionTest < Test::Unit::TestCase
       assert_equal "smiley", @question.answer[0].correct
     end
 
-    should "return the answer" do
+    should "return the answer match" do
       assert_equal ":)", @question.answer[0].text
     end
 

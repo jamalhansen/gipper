@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), *%w[.. .. spec spec_helper.rb])
-
 When(/^I tell gipper to parse the file$/)do
   @questions = Gipper::Quiz.parse @data
 end

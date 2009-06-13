@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), *%w[.. .. spec spec_helper.rb])
-
 Given(/^a GIFT file of true or false questions$/) do
   file = File.open(File.join(File.dirname(__FILE__), *%w[.. fixtures true_or_false.gift]))
   @data = file.read

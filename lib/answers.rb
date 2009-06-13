@@ -2,6 +2,7 @@ require 'answer'
 
 module Gipper
   class Answers
+    include Oniguruma
     # Parses the answers
     def self.parse answer, style_hint=nil
       array = []
@@ -18,15 +19,14 @@ module Gipper
     
     # Iterates through the answer clauses
     def split_apart clauses
-      reg = Regexp.new('.*?(?:[~=])(?!\\\\)', Regexp::MULTILINE)
-      
-      # need to use reverse since Ruby 1.8 has look ahead, but not look behind
-      matches =  clauses.reverse.scan(reg).reverse.map {|clause| clause.strip.reverse}
+      reg = ORegexp.new('(?<!\\\\)(?:[~=])(.(?!(?<!\\\\)[~=]))*', :options => OPTION_MULTILINE)
+     
+      matches =  reg.scan(clauses)
 
       # if we didn't find any ~ or = then there is only a single answer
-      matches = [clauses] if(matches.length == 0)
+      matches = [clauses] unless matches
       
-      matches
+      matches.map { |m| m.to_s.strip}
     end
   end
 end

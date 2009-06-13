@@ -26,7 +26,7 @@ describe Gipper::Answers do
   end
   
   it "should be tolerant of input variance" do
-    output = Gipper::Answers.parse("  ~ %%%%%%% ~ UUUUUUUUU ~@@%^&* ~ 232323= 2345       ")
+    output = Gipper::Answers.parse("  ~ %%%%%%% ~ UUUUUUUUU ~@@%^&* ~ 232323   = 2345       ")
     output.length.should eql(5)
     output[0].text.should eql("%%%%%%%")
     output[0].correct.should eql(false)

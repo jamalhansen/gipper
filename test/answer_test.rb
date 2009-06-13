@@ -78,4 +78,60 @@ class AnswerTest < Test::Unit::TestCase
       assert_equal "foo", result[1]
     end
   end
+
+
+  should "accept a single answer without equals as the correct and only answer" do
+    output = Gipper::Answer.parse("5")
+    assert output.correct
+    assert_equal "5", output.text
+  end
+
+  should "have a default weight of nil" do
+    output = Gipper::Answer.parse("foo" )
+    assert_nil output.weight
+  end
+
+  should "parse weight from numerical and non-numerical answers" do
+    output = Gipper::Answer.parse("%50%yadda yadda" )
+    assert_equal 50, output.weight
+  end
+
+  should "use decimals for numerical answers" do
+    output = Gipper::Answer.parse("5.6765", :numerical )
+    assert_equal 5.6765, output.correct
+    assert_nil output.weight
+    assert_equal 0, output.range
+  end
+
+  should "handle alternate range format for numerical answers" do
+    output = Gipper::Answer.parse("5.1..5.9", :numerical )
+    assert_equal 5.5, output.correct
+    assert_nil output.weight
+    assert_equal 4, (output.range * 10).to_i
+
+    output = Gipper::Answer.parse("5.6765..5.6766", :numerical )
+    assert_equal 5.67655, output.correct
+    assert_nil output.weight
+    assert_equal 5, (output.range * 100000).round
+  end
+
+  context "parsing true false questions" do
+    should "recognize comments" do
+      output = Gipper::Answer.parse(" T#foo" )
+      assert output.correct
+      assert_nil output.text
+      assert_equal "foo", output.comment
+    end
+
+    should "be tolerant of input variance" do
+      assert Gipper::Answer.parse(" T" ).correct
+      assert Gipper::Answer.parse("TrUE ").correct
+      assert Gipper::Answer.parse(" true").correct
+      assert Gipper::Answer.parse(" t ").correct
+      assert_equal false, Gipper::Answer.parse("F ").correct
+      assert_equal false, Gipper::Answer.parse("  false ").correct
+      assert_equal false, Gipper::Answer.parse(" faLse").correct
+      assert_equal false, Gipper::Answer.parse(" f ").correct
+    end
+  end
 end

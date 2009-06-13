@@ -50,13 +50,8 @@ class AnswerTest < Test::Unit::TestCase
       @answer = Gipper::Answer.new
     end
 
-    should "not touch unescaped answers" do
-      result = @answer.strip_escapes("foo")
-      assert_equal "foo", result
-    end
-
-    should "remove comments to the end of the line" do
-      result = @answer.strip_escapes("foo \\#comment")
+    should "not remove escaped feedback comments" do
+      result = @answer.unescape("foo \\#comment")
       assert_equal "foo #comment", result
     end
 

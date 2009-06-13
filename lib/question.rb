@@ -1,5 +1,8 @@
+require 'special_charater_handler'
+
 module Gipper
   class Question
+    include Gipper::SpecialCharacterHandler
     # Parses a single question and returns an instance of itself with the data
     def self.parse text
       question = Question.new
@@ -15,7 +18,7 @@ module Gipper
       reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
       matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
       
-      @text_post = strip_escapes(matches[0]) if !matches[0].empty?
+      @text_post = unescape(matches[0]) if !matches[0].empty?
       
       answer = matches[1]
       @style_hint = nil
@@ -27,7 +30,7 @@ module Gipper
       @answer = Gipper::Answers.parse(answer, @style_hint)
       @title, question = strip_title(matches[2])
       @format, question = strip_format(question)
-      @text = strip_escapes(question)
+      @text = unescape(question)
       @style = find_style
     end
     
@@ -63,10 +66,6 @@ module Gipper
     
     def boolean? klass
       klass == TrueClass || klass == FalseClass
-    end
-    
-    def strip_escapes text
-      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
     end
      
     def strip_title question

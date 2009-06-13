@@ -1,8 +1,9 @@
-require 'oniguruma'
+require 'special_charater_handler'
 
 module Gipper
   class Answer
     include Oniguruma
+    include Gipper::SpecialCharacterHandler
     attr_reader :weight, :correct, :comment, :range, :text
     
     def self.parse text, style_hint = nil
@@ -17,43 +18,50 @@ module Gipper
     end
 
     def read answer, style_hint
-      case style_hint
-      when :numerical
-        correct, range = answer.split(":", 2)
-        range, comment = split_comment range
-        correct.gsub!("=", "")
-        weight = 100
-
-        correct, weight = split_weight(correct)
-        @weight = weight.to_i if weight
-        
-        @comment = comment
-        parts = correct.split(/\.\./)
-        if parts.length == 2
-          parts.map! { |s| to_num(s) }
-          @correct = ((parts[0] + parts[1]) /2)
-          @range = ((parts[1] - parts[0]) /2)
-        else
-          @correct = to_num(correct)
-          @range = to_num(range)
-        end
+      if style_hint == :numerical
+        parse_as_numerical answer
       else
-        correct, text = split_correct answer
+        parse answer
+      end
+    end
 
-        split_matching(text) do |t, c|
-          text, correct = t, c       
-        end
+    def parse answer
+      correct, text = split_correct answer
 
-        text, weight = split_weight(text)
-        @weight = weight.to_i if weight
-        @text, @comment = split_comment(text).map { |item| strip_escapes item }
+      split_matching(text) do |t, c|
+        text, correct = t, c
+      end
 
-        @correct = correct
-        
-        # handle true false
-        if can_parse_as_true_false?(@text)
-          convert_to_true_false!
-        end
+      text, weight = split_weight(text)
+      @weight = weight.to_i if weight
+      @text, @comment = split_comment(text).map { |item| unescape item }
+
+      @correct = correct
+
+      # handle true false
+      if can_parse_as_true_false?(@text)
+        convert_to_true_false!
+      end
+    end
+
+    def parse_as_numerical answer
+      correct, range = answer.split(":", 2)
+      range, comment = split_comment range
+      correct.gsub!("=", "")
+      weight = 100
+
+      correct, weight = split_weight(correct)
+      @weight = weight.to_i if weight
+
+      @comment = comment
+      parts = correct.split(/\.\./)
+      if parts.length == 2
+        parts.map! { |s| to_num(s) }
+        @correct = ((parts[0] + parts[1]) /2)
+        @range = ((parts[1] - parts[0]) /2)
+      else
+        @correct = to_num(correct)
+        @range = to_num(range)
       end
     end
     
@@ -124,10 +132,6 @@ module Gipper
       text = match[:before].strip
       feedback_comment = match[:after].strip
       [text, feedback_comment]
-    end
-    
-    def strip_escapes text
-      text.gsub(/\\(~|=|#|\{|\})/, '\1') if !text.nil?
     end
 
     def blank? text

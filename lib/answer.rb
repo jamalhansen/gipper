@@ -117,7 +117,7 @@ module Gipper
       return [nil, nil] if blank?(answer_text)
 
       answer_text.strip!
-      reg = ORegexp.new('(?<before>.*)(?<!\\\\)#(?<after>.*)')
+      reg = ORegexp.new('(?<before>.*)(?<!\\\\)#(?<after>.*)', :options => OPTION_MULTILINE)
       match = reg.match(answer_text)
       return [answer_text, nil] unless match
 

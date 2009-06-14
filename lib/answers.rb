@@ -1,23 +1,62 @@
 require 'answer'
 
 module Gipper
-  class Answers
+  class Answers < Array
     include Oniguruma
-    attr_accessor :style_hint
 
-    # Parses the answers
-    def self.parse answer, style_hint=nil
-      array = []
-      @style_hint=style_hint
-
-      answers = self.new
-      parts = answers.split_apart answer
+    def parse answer
+      @answer_text = set_numerical_indicator answer
+      parts = split_apart @answer_text
 
       parts.each do |clause|
-        array << Answer.parse(clause, @style_hint)
+        self << Answer.parse(clause, @style_hint)
       end
-      
-      array
+    end
+
+    def find_style
+      return @style_hint if @style_hint
+
+      if self.length == 1 && self[0].text.nil? && boolean?(self[0].correct.class)
+        return :true_false
+      end
+
+      if self[0].text && self[0].correct.class == String
+        return :matching
+      end
+
+      if (count_true < 2) && (self.length > 1)
+        return :multiple_choice
+      else
+        return :short_answer
+      end
+    end
+
+
+    def boolean? klass
+      klass == TrueClass || klass == FalseClass
+    end
+
+    def count_true
+      true_count = 0
+      self.each do |hash|
+        if (hash.correct == true)
+          true_count = true_count + 1
+        end
+      end
+      true_count
+    end
+
+    def set_numerical_indicator answer
+      if answer[0] == 35
+        @style_hint = :numerical
+        answer[1..-1]
+      else
+        answer
+      end
+    end
+
+    def is_numerical? answer
+      answer[0] == 35
     end
     
     # Iterates through the answer clauses

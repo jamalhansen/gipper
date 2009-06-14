@@ -64,17 +64,20 @@ class AnswersTest < Test::Unit::TestCase
   context "splitting numerical answers" do
     setup do
       @answers = Gipper::Answers.new
-      @answers.style_hint = :numerical
+    end
+    
+    should "determine numerical by a leading pound" do
+      assert @answers.is_numerical? "#333"
     end
 
     should "understand numerical answer format" do
-      answers = @answers.split_apart("2000:3")
-      assert_answers ["2000:3"], answers
+      result = @answers.split_apart("2000:3")
+      assert_answers ["2000:3"], result
     end
 
     should "understand multiple numerical answer format" do
-      answers = @answers.split_apart("=2000:0 #Whoopdee do! =%50%2000:3 #Yippers")
-      assert_answers ["=2000:0 #Whoopdee do!", "=%50%2000:3 #Yippers"], answers
+      result = @answers.split_apart("=2000:0 #Whoopdee do! =%50%2000:3 #Yippers")
+      assert_answers ["=2000:0 #Whoopdee do!", "=%50%2000:3 #Yippers"], result
     end
   end
 end

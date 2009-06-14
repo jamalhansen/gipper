@@ -3,3 +3,4 @@ pkg*
 *.gemspec
 nbproject*
 spec.opts.netbeans
+coverage*

@@ -21,53 +21,24 @@ module Gipper
       @text_post = unescape(matches[0]) if !matches[0].empty?
       
       answer = matches[1]
-      @style_hint = nil
-      if answer[0] == 35 
-        @style_hint = :numerical
-        answer = answer[1..answer.length]
-      end
-      
-      @answer = Gipper::Answers.parse(answer, @style_hint)
+
+
+      @answer = Gipper::Answers.new
+      @answer.parse(answer)
       @title, question = strip_title(matches[2])
       @format, question = strip_format(question)
       @text = unescape(question)
-      @style = find_style
+      @style = find_style @answer
     end
-    
-    def find_style
-      return @style_hint if @style_hint
-            
-      if @answer.length == 1 && @answer[0].text.nil? && boolean?(@answer[0].correct.class)
-        return :true_false
-      end
-            
+
+    def find_style answers
       if @text_post
         return :missing_word
       end
-        
-      if @answer[0].text && @answer[0].correct.class == String 
-        return :matching
-      end
-      
-      true_count = 0
-      @answer.each do |hash|
-        if (hash.correct == true)
-          true_count = true_count + 1
-        end
-      end
-          
-      if true_count <= 1 && @answer.length > 1
-        return :multiple_choice
-      else
-        return :short_answer
-      end
-      
+
+      answers.find_style
     end
-    
-    def boolean? klass
-      klass == TrueClass || klass == FalseClass
-    end
-     
+
     def strip_title question
       reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)      
       parts = reg.match(question.strip)            

@@ -2,6 +2,7 @@ require 'special_charater_handler'
 
 module Gipper
   class Question
+    include Oniguruma
     include Gipper::SpecialCharacterHandler
     # Parses a single question and returns an instance of itself with the data
     def self.parse text
@@ -15,17 +16,17 @@ module Gipper
     
     # instance method to parse the question
     def read text
-      reg = Regexp.new('(.*)\}(?!\\\\)(.+)\{(?!\\\\)(.+)', Regexp::MULTILINE)
-      matches = text.strip.reverse.match(reg).captures.map { |s| s.strip.reverse }
-      
-      @text_post = unescape(matches[0]) if !matches[0].empty?
+      reg = ORegexp.new('(.+)(?<!\\\\)\{(?<!\\\\)(.+)\}(.*)', :options => OPTION_MULTILINE)
+      matches = reg.match(text.strip).captures.map { |s| s.strip }
+
+      @text_post = unescape(matches[2]) unless matches[2].empty?
       
       answer = matches[1]
 
-
       @answer = Gipper::Answers.new
       @answer.parse(answer)
-      @title, question = strip_title(matches[2])
+      
+      @title, question = strip_title(matches[0])
       @format, question = strip_format(question)
       @text = unescape(question)
       @style = find_style @answer

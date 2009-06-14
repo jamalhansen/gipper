@@ -25,4 +25,36 @@ class Test::Unit::TestCase
       "#{question}#{answer}"
     end
   end
+  
+  def assert_answer_parsing text, expected={}
+    answer = Gipper::Answer.new
+
+    if expected[:numerical]
+      answer.parse text, :numerical
+    else
+      answer.parse text
+    end
+
+    check_expected answer, expected, :correct
+    check_expected answer, expected, :text
+    check_expected answer, expected, :comment
+    check_expected answer, expected, :range
+    check_expected answer, expected, :weight
+  end
+
+  def check_expected answer, expected, key
+    if expected.has_key? key
+      actual = (answer.send key.to_s)
+      if expected[key].nil?
+        assert_nil actual, "key #{key.to_s} expected to be nil got #{actual}"
+      else
+        if actual.class == Float
+          assert_in_delta expected[key], actual, 0.00001, "key #{key.to_s} expected #{expected[key]} got #{actual} with tolerence of .00001"
+        else
+          assert_equal expected[key], actual, "key #{key.to_s} expected #{expected[key]} got #{actual}"
+        end
+
+      end
+    end
+  end
 end

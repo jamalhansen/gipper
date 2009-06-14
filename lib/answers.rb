@@ -9,7 +9,9 @@ module Gipper
       parts = split_apart @answer_text
 
       parts.each do |clause|
-        self << Answer.parse(clause, @style_hint)
+        answer = Answer.new
+        answer.parse(clause, @style_hint)
+        self << answer
       end
     end
 

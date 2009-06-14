@@ -5,27 +5,21 @@ module Gipper
     include Oniguruma
     include Gipper::SpecialCharacterHandler
     attr_reader :weight, :correct, :comment, :range, :text
-    
-    def self.parse text, style_hint = nil
-      answer = Answer.new
-      answer.read text, style_hint
-      answer
-    end
         
     def can_parse_as_true_false? answer
       return false if answer.nil?
       answer.downcase.strip =~ /^(t|f|true|false)$/
     end
 
-    def read answer, style_hint
+    def parse answer, style_hint = nil
       if style_hint == :numerical
         parse_as_numerical answer
       else
-        parse answer
+        parse_standard answer
       end
     end
 
-    def parse answer
+    def parse_standard answer
       correct, text = split_correct answer
 
       split_matching(text) do |t, c|

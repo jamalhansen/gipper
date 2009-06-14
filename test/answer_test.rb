@@ -94,31 +94,31 @@ class AnswerTest < Test::Unit::TestCase
 
   context "feedback comment splitting" do
     should "return nils when passed empty string" do
-      text, comment = @answer.split_comment("")
+      text, comment = @answer.send :split_comment, ""
       assert_nil comment
       assert_nil text
     end
 
     should "return nils when passed nil" do
-      text, comment = @answer.split_comment(nil)
+      text, comment = @answer.send :split_comment, nil
       assert_nil comment
       assert_nil text
     end
 
     should "return nil comment and full text when no comment" do
-      text, comment = @answer.split_comment("foo")
+      text, comment = @answer.send :split_comment, "foo"
       assert_nil comment
       assert_equal "foo", text
     end
 
     should "return comment and text when feedback comment" do
-      text, comment = @answer.split_comment("foo #bar")
+      text, comment = @answer.send :split_comment, "foo #bar"
       assert_equal "foo", text
       assert_equal "bar", comment
     end
 
     should "return full text when feedback comment is escaped" do
-      text, comment = @answer.split_comment('foo \\#bar')
+      text, comment = @answer.send :split_comment, 'foo \\#bar'
       assert_nil comment
       assert_equal 'foo \\#bar', text
     end
@@ -126,7 +126,7 @@ class AnswerTest < Test::Unit::TestCase
 
   context "escape stripping" do
     should "not remove escaped feedback comments" do
-      result = @answer.unescape("foo \\#comment")
+      result = @answer.send :unescape, "foo \\#comment"
       assert_equal "foo #comment", result
     end
 
@@ -138,13 +138,13 @@ class AnswerTest < Test::Unit::TestCase
 
   context "evaluating correctness" do
     should "view equals as correct" do
-      result = @answer.split_correct("= foo")
+      result = @answer.send :split_correct, "= foo"
       assert result[0]
       assert_equal "foo", result[1]
     end
 
     should "view twiddle as incorrect" do
-      result = @answer.split_correct("~ foo")
+      result = @answer.send :split_correct, "~ foo"
       assert !result[0]
       assert_equal "foo", result[1]
     end

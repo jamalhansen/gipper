@@ -9,7 +9,9 @@ module Gipper
       gift_file.strip!
       
       quiz.iterate_through gift_file do |question|
-        gift << Gipper::Question.parse(question)
+        q = Gipper::Question.new
+        q.parse(question)
+        gift << q
       end
       
       gift

@@ -4,18 +4,11 @@ module Gipper
   class Question
     include Oniguruma
     include Gipper::SpecialCharacterHandler
-    # Parses a single question and returns an instance of itself with the data
-    def self.parse text
-      question = Question.new
-      question.read text
-      question
-    end
-   
     
     attr_accessor :text_post, :answer, :title, :text, :style, :format
     
     # instance method to parse the question
-    def read text
+    def parse text
       reg = ORegexp.new('(.+)(?<!\\\\)\{(?<!\\\\)(.+)\}(.*)', :options => OPTION_MULTILINE)
       matches = reg.match(text.strip).captures.map { |s| s.strip }
 
@@ -25,10 +18,9 @@ module Gipper
 
       @answer = Gipper::Answers.new
       @answer.parse(answer)
-      
-      @title, question = strip_title(matches[0])
-      @format, question = strip_format(question)
-      @text = unescape(question)
+
+      @format, @title, @text = to_parts(matches[0]).map { |s| unescape s}
+
       @style = find_style @answer
     end
 
@@ -40,28 +32,20 @@ module Gipper
       answers.find_style
     end
 
-    def strip_title question
-      reg = Regexp.new('^:{2}(.*):{2}(.*)$', Regexp::MULTILINE)      
-      parts = reg.match(question.strip)            
-      
-      if parts        
-        title = parts.captures[0].strip        
-        question = parts.captures[1]      
-      end            
-     
-      return [title, question.strip]
-    end
+    def to_parts question
+      format_part = '(\[(?<format>(.*))\])'
+      title_part = '(:{2}(?<title>(.*)):{2})'
+      question_part = '(?<question>(.*))'
+      whole_regex = "^#{format_part}?\\s*#{title_part}?\\s*#{question_part}$"
 
-    def strip_format question
-      reg = Regexp.new('^\[(.*)\](.*)$', Regexp::MULTILINE)      
-      parts = reg.match(question.strip)            
-      
-      if parts        
-        title = parts.captures[0].strip        
-        question = parts.captures[1]      
-      end            
-     
-      return [title, question.strip]
+      reg = ORegexp.new(whole_regex, :options => OPTION_MULTILINE)
+      parts = reg.match(question.strip)
+
+      format = parts[:format].strip if parts[:format]
+      title = parts[:title].strip if parts[:title]
+      question = parts[:question].strip
+
+      return [format, title, question]
     end
   end
 end

@@ -47,7 +47,7 @@ module Gipper
     end
 
     def set_numerical_indicator answer
-      if answer[0] == 35
+      if is_numerical? answer
         @style_hint = :numerical
         answer[1..-1]
       else

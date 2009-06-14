@@ -1,11 +1,12 @@
 require 'test_helper'
 
 class AnswersTest < Test::Unit::TestCase
-  context "answer splitting" do
-    setup do
-      @answers = Gipper::Answers.new
-    end
+  def setup
+    @answers = Gipper::Answers.new
+  end
 
+
+  context "answer splitting" do
     should "not split strings that do not contain answer delimiters" do
       answers = @answers.split_apart("this is a single answer")
       assert_answers ["this is a single answer"], answers
@@ -78,6 +79,48 @@ class AnswersTest < Test::Unit::TestCase
     should "understand multiple numerical answer format" do
       result = @answers.split_apart("=2000:0 #Whoopdee do! =%50%2000:3 #Yippers")
       assert_answers ["=2000:0 #Whoopdee do!", "=%50%2000:3 #Yippers"], result
+    end
+  end
+
+  context "when determining the answer style" do
+    should "return a style of true_false when it has one answer of true and no text" do
+      @answers.parse("T")
+      assert_equal :true_false, @answers.find_style
+    end
+
+    should "return a style of true_false when it has one answer of false and no text" do
+      @answers.parse("F")
+      assert_equal :true_false, @answers.find_style
+    end
+
+    should "return a style of multiple choice when it has more than one answer and text and only one answer is true" do
+      @answers.parse("~foo =bar")
+      assert_equal :multiple_choice, @answers.find_style
+    end
+
+    should "return a style of short answer when it has more than one answer and text and all answers are true" do
+      @answers.parse("=foo =bar")
+      assert_equal :short_answer, @answers.find_style
+    end
+
+    should "return a style of short answer when it has one true answer and text" do
+      @answers.parse("=foo")
+      assert_equal :short_answer, @answers.find_style
+    end
+
+    should "return a style of short answer when it has one true answer and text without equals" do
+      @answers.parse("5")
+      assert_equal :short_answer, @answers.find_style
+    end
+
+    should "return a style of matching when correct contains a string ->" do
+      @answers.parse("=foo -> bar")
+      assert_equal :matching, @answers.find_style
+    end
+
+    should "return a style of matching when correct contains a symbols ->" do
+      @answers.parse("=:) -> smiley")
+      assert_equal :matching, @answers.find_style
     end
   end
 end

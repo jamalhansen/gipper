@@ -74,35 +74,20 @@ class AnswerTest < Test::Unit::TestCase
   # TeX expressions) you must "escape" them by preceding them with a \
   # directly in front of each { or } or =.
   should "ignore all escaped characters" do
-    @answer.parse("~ \\{\\}\\~\\=\\#foo")
-    assert_equal "{}~=#foo", @answer.text
-    assert_false @answer.correct
-    assert_nil @answer.comment
+    assert_answer_parsing "~ \\{\\}\\~\\=\\#foo", :correct => false, :text => "{}~=#foo", :comment => nil
   end
 
   context "numerical answers" do
     should "understand numerical answer format" do
-      @answer.parse_as_numerical("2000:3")
-      assert_equal 2000, @answer.correct
-      assert_equal 3, @answer.range
-      assert_nil @answer.weight
-      assert_nil @answer.comment
+      assert_answer_parsing "2000:3", :correct => 2000, :range => 3, :text => nil, :comment => nil, :weight => nil, :numerical => true
     end
 
     should "simple numerical answer format" do
-      @answer.parse_as_numerical("=2000:0 #Whoopdee do!")
-      assert_equal 2000, @answer.correct
-      assert_equal 0, @answer.range
-      assert_nil @answer.weight
-      assert_equal "Whoopdee do!", @answer.comment
+      assert_answer_parsing "=2000:0 #Whoopdee do!", :correct => 2000, :range => 0, :text => nil, :comment => "Whoopdee do!", :weight => nil, :numerical => true
     end
 
     should "percent based numerical answer format" do
-      @answer.parse_as_numerical("=%50%2000:3 #Yippers")
-      assert_equal 2000, @answer.correct
-      assert_equal 3, @answer.range
-      assert_equal 50, @answer.weight
-      assert_equal "Yippers", @answer.comment
+      assert_answer_parsing "=%50%2000:3 #Yippers", :correct => 2000, :range => 3, :text => nil, :comment => "Yippers", :weight => 50, :numerical => true
     end
   end
 

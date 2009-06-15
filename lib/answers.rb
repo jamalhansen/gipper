@@ -56,44 +56,44 @@ module Gipper
       end
     end
 
+    private
+      def boolean? klass
+        klass == TrueClass || klass == FalseClass
+      end
 
-    def boolean? klass
-      klass == TrueClass || klass == FalseClass
-    end
+      def count_true
+        true_count = 0
+        self.each do |hash|
+          if (hash.correct == true)
+            true_count = true_count + 1
+          end
+        end
+        true_count
+      end
 
-    def count_true
-      true_count = 0
-      self.each do |hash|
-        if (hash.correct == true)
-          true_count = true_count + 1
+      def set_numerical_indicator answer
+        if is_numerical? answer
+          @style_hint = :numerical
+          answer[1..-1]
+        else
+          answer
         end
       end
-      true_count
-    end
 
-    def set_numerical_indicator answer
-      if is_numerical? answer
-        @style_hint = :numerical
-        answer[1..-1]
-      else
-        answer
+      def is_numerical? answer
+        answer[0] == 35
       end
-    end
 
-    def is_numerical? answer
-      answer[0] == 35
-    end
-    
-    # Iterates through the answer clauses
-    def split_apart clauses
-      reg = ORegexp.new('(?<!\\\\)(?:[~=])(.(?!(?<!\\\\)[~=]))*', :options => OPTION_MULTILINE)
-     
-      matches =  reg.scan(clauses)
+      # Iterates through the answer clauses
+      def split_apart clauses
+        reg = ORegexp.new('(?<!\\\\)(?:[~=])(.(?!(?<!\\\\)[~=]))*', :options => OPTION_MULTILINE)
 
-      # if we didn't find any ~ or = then there is only a single answer
-      matches = [clauses] unless matches
-      
-      matches.map { |m| m.to_s.strip}
-    end
+        matches =  reg.scan(clauses)
+
+        # if we didn't find any ~ or = then there is only a single answer
+        matches = [clauses] unless matches
+
+        matches.map { |m| m.to_s.strip}
+      end
   end
 end

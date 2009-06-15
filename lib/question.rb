@@ -32,21 +32,22 @@ module Gipper
       answers.find_style
     end
 
-    def to_parts question
-      format_part = '(\[(?<format>(.*))\])'
-      title_part = '(:{2}(?<title>(.*)):{2})'
-      question_part = '(?<question>(.*))'
-      whole_regex = "^#{format_part}?\\s*#{title_part}?\\s*#{question_part}$"
+    private
+      def to_parts question
+        format_part = '(\[(?<format>(.*))\])'
+        title_part = '(:{2}(?<title>(.*)):{2})'
+        question_part = '(?<question>(.*))'
+        whole_regex = "^#{format_part}?\\s*#{title_part}?\\s*#{question_part}$"
 
-      reg = ORegexp.new(whole_regex, :options => OPTION_MULTILINE)
-      parts = reg.match(question.strip)
+        reg = ORegexp.new(whole_regex, :options => OPTION_MULTILINE)
+        parts = reg.match(question.strip)
 
-      format = parts[:format].strip if parts[:format]
-      title = parts[:title].strip if parts[:title]
-      question = parts[:question].strip
+        format = parts[:format].strip if parts[:format]
+        title = parts[:title].strip if parts[:title]
+        question = parts[:question].strip
 
-      return [format, title, question]
-    end
+        return [format, title, question]
+      end
   end
 end
 

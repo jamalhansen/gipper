@@ -62,29 +62,25 @@ class QuestionTest < Test::Unit::TestCase
 
   context "when passed a question with escaped brackets" do
     should "ignore the brackets" do
-      @q.parse(' foo \{escaped bracketed text\}{T}')
-      assert_equal "foo {escaped bracketed text}", @q.text
-      assert_equal :true_false, @q.style
-      assert @q.answer[0].correct
+      assert_question_parsing ' foo \\{escaped bracketed text\\}{T}',
+        :text => "foo {escaped bracketed text}",
+        :style => :true_false
     end
 
 
     should "handle all kinds of escaped stuff" do
-      @q.parse(' my crazy \#\~\= question \{escaped bracketed text\}{=\=\#\~foo#hi-yah}')
-      assert_equal "my crazy #~= question {escaped bracketed text}", @q.text
-      assert_equal :short_answer, @q.style
-      assert @q.answer[0].correct
-      assert_equal '=#~foo', @q.answer[0].text
-      assert_equal 'hi-yah', @q.answer[0].comment
+      assert_question_parsing ' my crazy \\#\\~\\= question \\{escaped bracketed text\\}{=\\=\\#\\~foo#hi-yah}',
+        :text => "my crazy #~= question {escaped bracketed text}",
+        :style => :short_answer
     end
   end
 
   context "when determining the answer style" do
     should "return missing word when question_post is present" do
-      @q.parse "foo {=bar ~baz} cheese."
-      assert_equal "foo", @q.text
-      assert_equal "cheese.", @q.text_post
-      assert_equal :missing_word, @q.style
+      assert_question_parsing "foo {=bar ~baz} cheese.",
+        :text => "foo",
+        :text_post => "cheese.",
+        :style => :missing_word
     end
   end
 end

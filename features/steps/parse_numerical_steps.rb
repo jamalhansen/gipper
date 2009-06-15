@@ -8,13 +8,13 @@ Then /^contains the correct numerical questions$/ do
   @questions.length.should be(2)
   
   #When was Harvey D. Smith born?{#1945:5}
-  @questions[0].style.should eql(:numerical)
-  @questions[0].text.should eql("When was Harvey D. Smith born?")
-  @questions[0].title.should eql(nil)
-  @questions[0].answer.length.should eql(1)
-  @questions[0].answer[0].correct.should eql(1945)
-  @questions[0].answer[0].range.should eql(5)
-  @questions[0].answer[0].weight.should eql(nil)
+  question = @questions[0]
+  assert_equal 1, question.answer.length
+  assert_question question, :style => :numerical,
+                            :text => "When was Harvey D. Smith born?",
+                            :title => nil
+
+  assert_answer question.answer[0], :correct => 1945, :range => 5, :weight => nil
   
   #//this comment will be ignored in the import process 
   #::Numerical example::
@@ -23,19 +23,13 @@ Then /^contains the correct numerical questions$/ do
   #    =%50%1993:2  #She was born in 1993.
   #                 You get 50% credit for being close.
   #}
-  @questions[1].style.should eql(:numerical)
-  @questions[1].text.should eql("When was Elizabeth M. Danson born?")
-  @questions[1].title.should eql("Numerical example")
-  @questions[1].answer.length.should eql(2)
-  @questions[1].answer[0].correct.should eql(1993)
-  @questions[1].answer[0].range.should eql(0)
-  @questions[1].answer[0].weight.should eql(nil)
-  @questions[1].answer[0].comment.should eql("Correct!  you will get full credit for this answer")
-  @questions[1].answer[1].correct.should eql(1993)
-  @questions[1].answer[1].range.should eql(2)
-  @questions[1].answer[1].weight.should eql(50)
-  @questions[1].answer[1].comment.should eql("She was born in 1993.
-                 You get 50% credit for being close.")
-  
+  question = @questions[1]
+  assert_equal 2, question.answer.length
+  assert_question question, :style => :numerical,
+                            :text => "When was Elizabeth M. Danson born?",
+                            :title => "Numerical example"
+
+  assert_answer question.answer[0], :correct => 1993, :range => 0, :weight => nil, :comment => "Correct!  you will get full credit for this answer"
+  assert_answer question.answer[1], :correct => 1993, :range => 2, :weight => 50, :comment => "She was born in 1993.\n                 You get 50% credit for being close."
 end
 

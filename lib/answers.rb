@@ -3,7 +3,7 @@ require 'answer'
 module Gipper
   # == Gipper::Answers
   #
-  # This class acts like an Array that contains all of the available Answers.
+  # This class acts like an Array that contains each Answer.
   #
   # To popuate the object use the parse method.
   #

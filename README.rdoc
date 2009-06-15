@@ -17,7 +17,7 @@ A ruby parser for the GIFT quiz file format
 
 == REQUIREMENTS:
 
-* N/A
+* Oniguruma
 
 == INSTALL:
 

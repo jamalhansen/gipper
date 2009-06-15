@@ -1,11 +1,39 @@
 require 'special_charater_handler'
 
 module Gipper
+  # == Gipper::Answer
+  # 
+  # Represents the single correct answer if there is only one answer,
+  # or one of the answer choices if multiple are provided for a question.
+  #
+  # To populate the answer from a string use the parse method
+  #
+  #   answer = Gipper::Answer.new
+  #   answer.parse "= foo #bar"
+  #
+  #   answer.correct
+  #   >> true
+  #
+  #   answer.text
+  #   >> foo
+  #
+  #   answer.comment
+  #   >> bar
+  #
+  # or 
+  #
+  #   answer.parse "F"
+  #
+  #   answer.correct
+  #   >> false
+  #
   class Answer
     include Oniguruma
     include Gipper::SpecialCharacterHandler
     attr_reader :weight, :correct, :comment, :range, :text
 
+    # Will parse a single answer into it's parts.
+    # If the answer type is numerical, pass :numerical as the optional second parameter.
     def parse answer, style_hint = nil
       if style_hint == :numerical
         parse_as_numerical answer

@@ -1,9 +1,29 @@
 require 'answer'
 
 module Gipper
+  # == Gipper::Answers
+  #
+  # This class acts like an Array that contains all of the available Answers.
+  #
+  # To popuate the object use the parse method.
+  #
+  #   answers = Gipper::Answers.new
+  #   answers.parse "~ wrong = correct # you are right!"
+  #
+  #   answers.length
+  #   >> 2
+  #
+  #   answers[0].correct
+  #   >> false
+  #
+  #   answers.find_style
+  #   >> :multiple_choice
+
+
   class Answers < Array
     include Oniguruma
 
+    # parses the answers an array of answer objects.
     def parse answer
       @answer_text = set_numerical_indicator answer
       parts = split_apart @answer_text
@@ -15,6 +35,9 @@ module Gipper
       end
     end
 
+    # find_style does it's best to determine the questions style.  It cannot determine
+    # the missing word questions since the necessary information is in the question object.
+    # use question.find_style for that purpose.
     def find_style
       return @style_hint if @style_hint
 

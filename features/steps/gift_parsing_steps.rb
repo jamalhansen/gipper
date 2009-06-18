@@ -2,7 +2,7 @@
 Given /^a GIFT file$/ do
   file = File.open(File.join(File.dirname(__FILE__), *%w[.. fixtures super_gift.txt]))
   @data = file.read
-  @data.length.should be > 0
+  assert @data.length > 0
 end
 
 Then /^contains the correct questions$/ do 
